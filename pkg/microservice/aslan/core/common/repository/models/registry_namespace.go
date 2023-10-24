@@ -25,6 +25,7 @@ import (
 	"github.com/koderover/zadig/pkg/microservice/aslan/config"
 	"github.com/koderover/zadig/pkg/shared/client/plutusvendor"
 	e "github.com/koderover/zadig/pkg/tool/errors"
+	"github.com/koderover/zadig/pkg/tool/log"
 )
 
 type RegistryNamespace struct {
@@ -79,6 +80,7 @@ func (args *RegistryNamespace) LicenseValidate() error {
 	if err != nil {
 		return fmt.Errorf("failed to validate zadig license status, error: %s", err)
 	}
+	log.Debugf("args.RegType: %s", args.RegType)
 	if args.RegType == config.RegistryProviderACREnterprise ||
 		args.RegType == config.RegistryProviderTCREnterprise ||
 		args.RegType == config.RegistryProviderECR ||
