@@ -190,24 +190,26 @@ func parseUserPrompt(args *AiAnalysisReq, aiClient llm.ILLM, logger *zap.Sugared
 	}
 
 	prompt := fmt.Sprintf("%s;\"\"\"%s\"\"\"", util.RemoveExtraSpaces(ParseUserPromptPrompt), args.Prompt)
+	log.Debugf("the prompt is: %s", prompt)
 	resp, err := aiClient.GetCompletion(context.TODO(), prompt)
 	if err != nil {
-		return input, err
+		return input, fmt.Errorf("failed to get completion, error: %v", err)
 	}
+	log.Debugf("the response is: %s", resp)
 
 	// parse the user prompt to prepare the input data of projects stat
 	err = json.Unmarshal([]byte(resp), &input)
 	if err != nil {
-		return input, err
+		return input, fmt.Errorf("failed to unmarshal response, error: %v", err)
 	}
 
 	if err := checkInputData(input, jobs, projectList); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to check input data, error: %v", err)
 	}
 
 	err = getTimeParseResult(args.Prompt, input, logger)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to get time parse result, error: %v", err)
 	}
 	return input, nil
 }
