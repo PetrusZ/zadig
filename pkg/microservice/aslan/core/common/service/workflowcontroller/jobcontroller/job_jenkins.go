@@ -23,7 +23,7 @@ import (
 	"net/http"
 	"time"
 
-	jenkins "github.com/koderover/gojenkins"
+	jenkins "github.com/bndr/gojenkins"
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/config"
 	commonmodels "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/repository/models"
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/repository/mongodb"
@@ -70,6 +70,7 @@ func (c *JenkinsJobCtl) Run(ctx context.Context) {
 	transport := &http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: true}}
 	client := &http.Client{Transport: transport}
 	jenkinsClient, err := jenkins.CreateJenkins(client, info.URL, info.Username, info.Password).Init(context.Background())
+	log.Debug("jenkinsClient basic auth: %+v", jenkinsClient, jenkinsClient.Requester.BasicAuth)
 
 	if err != nil {
 		logError(c.job, fmt.Sprintf("failed to create jenkins client, error is: %s", err), c.logger)
