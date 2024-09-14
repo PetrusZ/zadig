@@ -443,6 +443,17 @@ func (*Router) Inject(router *gin.RouterGroup) {
 		dbs.POST("/validate", ValidateDBInstance)
 	}
 
+	// ---------------------------------------------------------------------------------------
+	// service label management
+	// ---------------------------------------------------------------------------------------
+	labels := router.Group("labels")
+	{
+		labels.GET("", ListServiceLabelSettings)
+		labels.POST("", CreateServiceLabelSetting)
+		labels.PUT("/:id", UpdateServiceLabelSetting)
+		labels.DELETE("/:id", DeleteServiceLabelSetting)
+	}
+
 	sae := router.Group("sae")
 	{
 		sae.POST("", CreateSAE)

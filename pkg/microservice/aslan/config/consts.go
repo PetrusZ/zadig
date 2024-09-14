@@ -320,6 +320,13 @@ const (
 	ServiceScanningType ScanningModuleType = "service_scanning"
 )
 
+type FreeStyleJobType string
+
+const (
+	NormalFreeStyleJobType  FreeStyleJobType = ""
+	ServiceFreeStyleJobType FreeStyleJobType = "service_freestyle"
+)
+
 type DeployContent string
 
 const (
@@ -613,4 +620,11 @@ const (
 	Production = "production"
 	Testing    = "testing"
 	Both       = "both"
+)
+
+type DistributeImageMethod string
+
+const (
+	DistributeImageMethodImagePush DistributeImageMethod = "image_push"
+	DistributeImageMethodCloudSync DistributeImageMethod = "cloud_sync"
 )

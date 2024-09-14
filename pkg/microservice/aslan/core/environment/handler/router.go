@@ -256,11 +256,6 @@ func (*Router) Inject(router *gin.RouterGroup) {
 		revision.GET("/productsnaps", ListProductsRevisionSnaps)
 	}
 
-	bundles := router.Group("bundle-resources")
-	{
-		bundles.GET("", GetBundleResources)
-	}
-
 	initialize := router.Group("init")
 	{
 		initialize.POST("/type/:envType", InitializeEnv)
