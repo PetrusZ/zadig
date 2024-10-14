@@ -15,16 +15,19 @@ type AuthorizedResources struct {
 }
 
 type ProjectActions struct {
-	IsProjectAdmin    bool                      `json:"is_system_admin"`
-	Workflow          *WorkflowActions          `json:"workflow"`
-	Env               *EnvActions               `json:"env"`
-	ProductionEnv     *ProductionEnvActions     `json:"production_env"`
-	Service           *ServiceActions           `json:"service"`
-	ProductionService *ProductionServiceActions `json:"production_service"`
-	Build             *BuildActions             `json:"build"`
-	Test              *TestActions              `json:"test"`
-	Scanning          *ScanningActions          `json:"scanning"`
-	Version           *VersionActions           `json:"version"`
+	IsProjectAdmin           bool                             `json:"is_system_admin"`
+	Workflow                 *WorkflowActions                 `json:"workflow"`
+	Env                      *EnvActions                      `json:"env"`
+	ProductionEnv            *ProductionEnvActions            `json:"production_env"`
+	Service                  *ServiceActions                  `json:"service"`
+	ProductionService        *ProductionServiceActions        `json:"production_service"`
+	Build                    *BuildActions                    `json:"build"`
+	Test                     *TestActions                     `json:"test"`
+	Scanning                 *ScanningActions                 `json:"scanning"`
+	Version                  *VersionActions                  `json:"version"`
+	SprintManagement         *SprintManagementActions         `json:"sprint_management"`
+	SprintTemplateManagement *SprintTemplateManagementActions `json:"sprint_template_management"`
+	SprintWorkItem           *SprintWorkItemManagementActions `json:"sprint_workitem"`
 }
 
 type SystemActions struct {
@@ -206,6 +209,24 @@ type DBInstanceManagementActions struct {
 }
 
 type LabelManagementActions struct {
+	Create bool
+	Edit   bool
+	Delete bool
+}
+
+type SprintTemplateManagementActions struct {
+	Edit bool
+}
+
+type SprintManagementActions struct {
+	Create  bool
+	View    bool
+	Edit    bool
+	Delete  bool
+	Archive bool
+}
+
+type SprintWorkItemManagementActions struct {
 	Create bool
 	Edit   bool
 	Delete bool
