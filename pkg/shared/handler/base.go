@@ -17,6 +17,7 @@ limitations under the License.
 package handler
 
 import (
+	gocontext "context"
 	"encoding/base64"
 	"encoding/json"
 	"errors"
@@ -34,15 +35,17 @@ import (
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/system/repository/mongodb"
 	"github.com/koderover/zadig/v2/pkg/setting"
 	"github.com/koderover/zadig/v2/pkg/shared/client/user"
+	"github.com/koderover/zadig/v2/pkg/tool/log"
 	"github.com/koderover/zadig/v2/pkg/types"
 	"github.com/koderover/zadig/v2/pkg/util/ginzap"
 )
 
 // Context struct
 type Context struct {
+	gocontext.Context
 	Logger       *zap.SugaredLogger
 	UnAuthorized bool
-	Err          error
+	RespErr      error
 	Resp         interface{}
 	Account      string
 	UserName     string
@@ -64,6 +67,15 @@ type jwtClaims struct {
 type FederatedClaims struct {
 	ConnectorId string `json:"connector_id"`
 	UserId      string `json:"user_id"`
+}
+
+func (c *Context) GenUserBriefInfo() types.UserBriefInfo {
+	return types.UserBriefInfo{
+		UID:          c.UserID,
+		Name:         c.UserName,
+		Account:      c.Account,
+		IdentityType: c.IdentityType,
+	}
 }
 
 // NewContext returns a context without user authorization info.
@@ -99,6 +111,7 @@ func NewContext(c *gin.Context) *Context {
 	}
 
 	return &Context{
+		Context:      c.Request.Context(),
 		UserName:     claims.Name,
 		UserID:       claims.UID,
 		Account:      claims.Account,
@@ -123,6 +136,15 @@ func NewContextWithAuthorization(c *gin.Context) (*Context, error) {
 	}
 	resp.Resources = resourceAuthInfo
 	return resp, nil
+}
+
+func NewBackgroupContext() *Context {
+	return &Context{
+		Context:  gocontext.Background(),
+		UserName: "system",
+		Account:  "system",
+		Logger:   log.SugaredLogger(),
+	}
 }
 
 func GetResourcesInHeader(c *gin.Context) ([]string, bool) {
@@ -224,15 +246,15 @@ func getUserFromJWT(token string) (jwtClaims, error) {
 
 func JSONResponse(c *gin.Context, ctx *Context) {
 	if ctx.UnAuthorized {
-		if ctx.Err != nil {
-			c.Set(setting.ResponseError, ctx.Err)
+		if ctx.RespErr != nil {
+			c.Set(setting.ResponseError, ctx.RespErr)
 		}
 		c.AbortWithStatus(http.StatusForbidden)
 		return
 	}
 
-	if ctx.Err != nil {
-		c.Set(setting.ResponseError, ctx.Err)
+	if ctx.RespErr != nil {
+		c.Set(setting.ResponseError, ctx.RespErr)
 		c.Abort()
 		return
 	}

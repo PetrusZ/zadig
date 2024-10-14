@@ -754,6 +754,24 @@ func modifyUserProjectAuth(userAuthInfo *ProjectActions, verb string) {
 		userAuthInfo.Scanning.Delete = true
 	case VerbRunScan:
 		userAuthInfo.Scanning.Execute = true
+	case VerbEditSprintTemplate:
+		userAuthInfo.SprintTemplate.Edit = true
+	case VerbGetSprint:
+		userAuthInfo.Sprint.View = true
+	case VerbCreateSprint:
+		userAuthInfo.Sprint.Create = true
+	case VerbEditSprint:
+		userAuthInfo.Sprint.Edit = true
+	case VerbDeleteSprint:
+		userAuthInfo.Sprint.Delete = true
+	case VerbArchiveSprint:
+		userAuthInfo.Sprint.Archive = true
+	case VerbCreateSprintWorkItem:
+		userAuthInfo.SprintWorkItem.Create = true
+	case VerbEditSprintWorkItem:
+		userAuthInfo.SprintWorkItem.Edit = true
+	case VerbDeleteSprintWorkItem:
+		userAuthInfo.SprintWorkItem.Delete = true
 	}
 }
 
