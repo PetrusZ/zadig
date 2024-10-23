@@ -549,8 +549,12 @@ func (j *FreeStyleJob) GetOutPuts(log *zap.SugaredLogger) []string {
 		return resp
 	}
 
-	jobKey := j.job.Name
-	resp = append(resp, getOutputKey(jobKey, j.spec.Outputs)...)
+	if j.spec.FreestyleJobType == config.ServiceFreeStyleJobType {
+		resp = append(resp, getOutputKey(j.job.Name+".<SERVICE>.<MODULE>", j.spec.Outputs)...)
+	} else if j.spec.FreestyleJobType == config.NormalFreeStyleJobType {
+		jobKey := j.job.Name
+		resp = append(resp, getOutputKey(jobKey, j.spec.Outputs)...)
+	}
 	return resp
 }
 

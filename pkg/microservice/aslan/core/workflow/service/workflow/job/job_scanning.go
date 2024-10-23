@@ -347,7 +347,11 @@ func (j *ScanningJob) GetOutPuts(log *zap.SugaredLogger) []string {
 				}
 			}
 		}
-		resp = append(resp, getOutputKey(jobKey, ensureScanningOutputs(scanningInfo.Outputs))...)
+
+		resp = append(resp, getOutputKey(jobKey, scanningInfo.Outputs)...)
+		if j.spec.ScanningType == config.ServiceScanningType {
+			resp = append(resp, getOutputKey(j.job.Name+".<SERVICE>.<MODULE>", scanningInfo.Outputs)...)
+		}
 	}
 	return resp
 }

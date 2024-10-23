@@ -725,8 +725,13 @@ func (j *TestingJob) GetOutPuts(log *zap.SugaredLogger) []string {
 				}
 			}
 		}
+
 		resp = append(resp, getOutputKey(jobKey, testingInfo.Outputs)...)
+		if j.spec.TestType == config.ServiceTestType {
+			resp = append(resp, getOutputKey(j.job.Name+".<SERVICE>.<MODULE>", testingInfo.Outputs)...)
+		}
 	}
+
 	return resp
 }
 
