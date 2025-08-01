@@ -100,6 +100,7 @@ func GetDeliveryVersion(c *gin.Context) {
 // @Accept 	json
 // @Produce json
 // @Param 	projectName 		query 		string							true	"projectName"
+// @Param 	label 				query 		string							true	"label"
 // @Param 	page 				query 		int								true	"page"
 // @Param 	perPage 			query 		int								true	"perPage"
 // @Success 200     {array} 	models.DeliveryVersionV2
@@ -161,6 +162,54 @@ func ListDeliveryVersion(c *gin.Context) {
 	var total int
 	ctx.Resp, total, ctx.RespErr = deliveryservice.ListDeliveryVersionV2(args, ctx.Logger)
 	c.Writer.Header().Add("X-Total", strconv.Itoa(total))
+}
+
+// @Summary List Delivery Version Labels
+// @Description List Delivery Version Labels
+// @Tags 	delivery
+// @Accept 	json
+// @Produce json
+// @Param 	projectName 		query 		string							true	"projectName"
+// @Success 200     {array} 	string
+// @Router /api/aslan/delivery/releases/labels [get]
+func ListDeliveryVersionLabels(c *gin.Context) {
+	ctx, err := internalhandler.NewContextWithAuthorization(c)
+	defer func() { internalhandler.JSONResponse(c, ctx) }()
+
+	if err != nil {
+		ctx.RespErr = fmt.Errorf("authorization Info Generation failed: err %s", err)
+		ctx.UnAuthorized = true
+		return
+	}
+
+	projectKey := c.Query("projectName")
+	if !ctx.Resources.IsSystemAdmin {
+		if projectKey == "" {
+			if !ctx.Resources.SystemActions.DeliveryCenter.ViewVersion {
+				ctx.UnAuthorized = true
+				return
+			}
+		} else {
+			if _, ok := ctx.Resources.ProjectAuthInfo[projectKey]; !ok {
+				ctx.UnAuthorized = true
+				return
+			}
+
+			if !ctx.Resources.ProjectAuthInfo[projectKey].IsProjectAdmin &&
+				!ctx.Resources.ProjectAuthInfo[projectKey].Version.View {
+				ctx.UnAuthorized = true
+				return
+			}
+		}
+	}
+
+	err = commonutil.CheckZadigProfessionalLicense()
+	if err != nil {
+		ctx.RespErr = err
+		return
+	}
+
+	ctx.Resp, ctx.RespErr = deliveryservice.ListDeliveryVersionV2Labels(projectKey)
 }
 
 // @Summary Create K8S Delivery Version
