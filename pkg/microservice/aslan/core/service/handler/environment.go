@@ -24,7 +24,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/koderover/zadig/v2/pkg/types"
 
-	commonutil "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/service/service"
 	internalhandler "github.com/koderover/zadig/v2/pkg/shared/handler"
 	e "github.com/koderover/zadig/v2/pkg/tool/errors"
@@ -44,14 +43,6 @@ func GetDeployableEnvs(c *gin.Context) {
 	defer func() { internalhandler.JSONResponse(c, ctx) }()
 
 	production := c.Query("production") == "true"
-	if production {
-		err := commonutil.CheckZadigProfessionalLicense()
-		if err != nil {
-			ctx.RespErr = err
-			return
-		}
-	}
-
 	ctx.Resp, ctx.RespErr = service.GetDeployableEnvs(c.Param("name"), c.Query("projectName"), production)
 }
 
@@ -110,12 +101,6 @@ func LoadKubeWorkloadsYaml(c *gin.Context) {
 			ctx.UnAuthorized = true
 			return
 		}
-	}
-
-	err = commonutil.CheckZadigEnterpriseLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
 	}
 
 	ctx.RespErr = service.LoadKubeWorkloadsYaml(ctx.UserName, args, false, production, ctx.Logger)

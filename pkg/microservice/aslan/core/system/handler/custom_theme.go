@@ -22,7 +22,6 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/repository/models"
-	commonutil "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/system/service"
 	internalhandler "github.com/koderover/zadig/v2/pkg/shared/handler"
 	e "github.com/koderover/zadig/v2/pkg/tool/errors"
@@ -67,11 +66,6 @@ func UpdateThemeInfo(c *gin.Context) {
 	}
 
 	if theme == nil {
-		return
-	}
-
-	if err = commonutil.CheckZadigProfessionalLicense(); err != nil {
-		ctx.RespErr = err
 		return
 	}
 

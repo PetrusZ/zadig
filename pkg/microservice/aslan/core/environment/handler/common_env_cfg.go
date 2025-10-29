@@ -28,7 +28,6 @@ import (
 
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/config"
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/repository/models"
-	commonutil "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/environment/service"
 	"github.com/koderover/zadig/v2/pkg/setting"
 	internalhandler "github.com/koderover/zadig/v2/pkg/shared/handler"
@@ -74,12 +73,6 @@ func DeleteCommonEnvCfg(c *gin.Context) {
 					ctx.UnAuthorized = true
 					return
 				}
-			}
-
-			err = commonutil.CheckZadigProfessionalLicense()
-			if err != nil {
-				ctx.RespErr = err
-				return
 			}
 		} else {
 			if !ctx.Resources.ProjectAuthInfo[projectKey].IsProjectAdmin &&
@@ -141,12 +134,6 @@ func CreateCommonEnvCfg(c *gin.Context) {
 					ctx.UnAuthorized = true
 					return
 				}
-			}
-
-			err = commonutil.CheckZadigProfessionalLicense()
-			if err != nil {
-				ctx.RespErr = err
-				return
 			}
 		} else {
 			if !ctx.Resources.ProjectAuthInfo[projectKey].IsProjectAdmin &&
@@ -217,12 +204,6 @@ func UpdateCommonEnvCfg(c *gin.Context) {
 					return
 				}
 			}
-
-			err = commonutil.CheckZadigProfessionalLicense()
-			if err != nil {
-				ctx.RespErr = err
-				return
-			}
 		} else {
 			if !ctx.Resources.ProjectAuthInfo[projectKey].IsProjectAdmin &&
 				!ctx.Resources.ProjectAuthInfo[projectKey].Env.EditConfig {
@@ -289,12 +270,6 @@ func ListCommonEnvCfgHistory(c *gin.Context) {
 					return
 				}
 			}
-
-			err = commonutil.CheckZadigProfessionalLicense()
-			if err != nil {
-				ctx.RespErr = err
-				return
-			}
 		} else {
 			if !ctx.Resources.ProjectAuthInfo[projectKey].IsProjectAdmin &&
 				!ctx.Resources.ProjectAuthInfo[projectKey].Env.View {
@@ -352,12 +327,6 @@ func ListLatestEnvCfg(c *gin.Context) {
 					return
 				}
 			}
-
-			err = commonutil.CheckZadigProfessionalLicense()
-			if err != nil {
-				ctx.RespErr = err
-				return
-			}
 		} else {
 			if !ctx.Resources.ProjectAuthInfo[args.ProjectName].IsProjectAdmin &&
 				!ctx.Resources.ProjectAuthInfo[args.ProjectName].Env.View {
@@ -403,12 +372,6 @@ func SyncEnvResource(c *gin.Context) {
 					ctx.UnAuthorized = true
 					return
 				}
-			}
-
-			err = commonutil.CheckZadigProfessionalLicense()
-			if err != nil {
-				ctx.RespErr = err
-				return
 			}
 		} else {
 			if !ctx.Resources.ProjectAuthInfo[projectKey].IsProjectAdmin &&

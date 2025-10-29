@@ -23,7 +23,6 @@ import (
 	"github.com/koderover/zadig/v2/pkg/types"
 
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/repository/models"
-	commonutil "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/sprint_management/service"
 	"github.com/koderover/zadig/v2/pkg/setting"
 	internalhandler "github.com/koderover/zadig/v2/pkg/shared/handler"
@@ -60,12 +59,6 @@ func GetSprintTemplate(c *gin.Context) {
 			ctx.UnAuthorized = true
 			return
 		}
-	}
-
-	err = commonutil.CheckZadigEnterpriseLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
 	}
 
 	ctx.Resp, ctx.RespErr = service.GetSprintTemplate(ctx, c.Param("id"))
@@ -117,12 +110,6 @@ func CreateSprintTemplate(c *gin.Context) {
 
 	internalhandler.InsertDetailedOperationLog(c, ctx.UserName, projectName, setting.OperationSceneSprintManagement, "创建", "迭代管理-流程", req.Name, string(data), types.RequestBodyTypeJSON, ctx.Logger, "")
 
-	err = commonutil.CheckZadigEnterpriseLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
-	}
-
 	ctx.RespErr = service.CreateSprintTemplate(ctx, req)
 }
 
@@ -156,12 +143,6 @@ func DeleteSprintTemplate(c *gin.Context) {
 			ctx.UnAuthorized = true
 			return
 		}
-	}
-
-	err = commonutil.CheckZadigEnterpriseLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
 	}
 
 	internalhandler.InsertDetailedOperationLog(c, ctx.UserName, projectName, setting.OperationSceneSprintManagement, "删除", "迭代管理-流程", "流程ID: "+c.Param("id"), "", types.RequestBodyTypeJSON, ctx.Logger, "")
@@ -200,12 +181,6 @@ func ListSprintTemplates(c *gin.Context) {
 			ctx.UnAuthorized = true
 			return
 		}
-	}
-
-	err = commonutil.CheckZadigEnterpriseLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
 	}
 
 	opt := new(service.ListSprintTemplateOption)
@@ -248,12 +223,6 @@ func GetDefaultSprintTemplates(c *gin.Context) {
 		}
 	}
 
-	err = commonutil.CheckZadigEnterpriseLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
-	}
-
 	ctx.Resp, ctx.RespErr = service.GetDefaultSprintTemplate(ctx, projectName)
 }
 
@@ -288,12 +257,6 @@ func AddSprintTemplateStage(c *gin.Context) {
 			ctx.UnAuthorized = true
 			return
 		}
-	}
-
-	err = commonutil.CheckZadigEnterpriseLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
 	}
 
 	internalhandler.InsertDetailedOperationLog(c, ctx.UserName, projectName, setting.OperationSceneSprintManagement, "更新", "迭代管理-流程添加阶段", "阶段: "+c.Query("stageName"), "", types.RequestBodyTypeJSON, ctx.Logger, "")
@@ -334,12 +297,6 @@ func DeleteSprintTemplateStage(c *gin.Context) {
 		}
 	}
 
-	err = commonutil.CheckZadigEnterpriseLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
-	}
-
 	internalhandler.InsertDetailedOperationLog(c, ctx.UserName, projectName, setting.OperationSceneSprintManagement, "更新", "迭代管理-流程删除阶段", "阶段ID: "+c.Param("stageID"), "", types.RequestBodyTypeJSON, ctx.Logger, "")
 
 	ctx.RespErr = service.DeleteSprintTemplateStage(ctx, c.Param("id"), c.Param("stageID"))
@@ -378,12 +335,6 @@ func UpdateSprintTemplateStageName(c *gin.Context) {
 			ctx.UnAuthorized = true
 			return
 		}
-	}
-
-	err = commonutil.CheckZadigEnterpriseLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
 	}
 
 	internalhandler.InsertDetailedOperationLog(c, ctx.UserName, projectName, setting.OperationSceneSprintManagement, "更新", "迭代管理-流程阶段名称", "阶段: "+c.Query("stageName"), "", types.RequestBodyTypeJSON, ctx.Logger, "")
@@ -428,12 +379,6 @@ func UpdateSprintTemplateStageWorkflows(c *gin.Context) {
 			ctx.UnAuthorized = true
 			return
 		}
-	}
-
-	err = commonutil.CheckZadigEnterpriseLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
 	}
 
 	data, err := internalhandler.GetRawData(c)

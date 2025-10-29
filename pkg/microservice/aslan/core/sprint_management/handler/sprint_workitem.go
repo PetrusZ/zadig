@@ -24,7 +24,6 @@ import (
 
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/repository/models"
 	commonmodels "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/repository/models"
-	commonutil "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/sprint_management/service"
 	"github.com/koderover/zadig/v2/pkg/setting"
 	internalhandler "github.com/koderover/zadig/v2/pkg/shared/handler"
@@ -48,12 +47,6 @@ func GetSprintWorkItem(c *gin.Context) {
 	if err != nil {
 		ctx.RespErr = fmt.Errorf("authorization Info Generation failed: err %s", err)
 		ctx.UnAuthorized = true
-		return
-	}
-
-	err = commonutil.CheckZadigEnterpriseLicense()
-	if err != nil {
-		ctx.RespErr = err
 		return
 	}
 
@@ -98,12 +91,6 @@ func CreateSprintWorkItem(c *gin.Context) {
 		return
 	}
 
-	err = commonutil.CheckZadigEnterpriseLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
-	}
-
 	ctx.RespErr = service.CreateSprintWorkItem(ctx, req)
 }
 
@@ -142,12 +129,6 @@ func UpdateSprintWorkItemTitle(c *gin.Context) {
 			ctx.UnAuthorized = true
 			return
 		}
-	}
-
-	err = commonutil.CheckZadigEnterpriseLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
 	}
 
 	req := new(UpdateSprintWorkItemTitleRequest)
@@ -196,12 +177,6 @@ func UpdateSprintWorkItemDescription(c *gin.Context) {
 		}
 	}
 
-	err = commonutil.CheckZadigEnterpriseLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
-	}
-
 	req := new(UpdateSprintWorkItemDescRequest)
 	if err := c.ShouldBindJSON(req); err != nil {
 		ctx.RespErr = e.ErrInvalidParam.AddDesc(err.Error())
@@ -243,12 +218,6 @@ func UpdateSprintWorkItemOwner(c *gin.Context) {
 			ctx.UnAuthorized = true
 			return
 		}
-	}
-
-	err = commonutil.CheckZadigEnterpriseLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
 	}
 
 	req := []types.UserBriefInfo{}
@@ -313,12 +282,6 @@ func MoveSprintWorkItem(c *gin.Context) {
 		return
 	}
 
-	err = commonutil.CheckZadigEnterpriseLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
-	}
-
 	ctx.RespErr = service.MoveSprintWorkItem(ctx, c.Query("sprintID"), c.Param("id"), c.Query("stageID"), index, sprintUpdateTime, workitemUpdateTime)
 }
 
@@ -352,12 +315,6 @@ func DeleteSprintWorkItem(c *gin.Context) {
 			ctx.UnAuthorized = true
 			return
 		}
-	}
-
-	err = commonutil.CheckZadigEnterpriseLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
 	}
 
 	internalhandler.InsertDetailedOperationLog(c, ctx.UserName, projectName, setting.OperationSceneSprintManagement, "删除", "迭代管理-工作项", fmt.Sprintf("工作项ID: %s", c.Param("id")), "", types.RequestBodyTypeJSON, ctx.Logger, "")
@@ -402,12 +359,6 @@ func ExecSprintWorkItemWorkflow(c *gin.Context) {
 				return
 			}
 		}
-	}
-
-	err = commonutil.CheckZadigEnterpriseLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
 	}
 
 	workitemIDs, ok := c.GetQueryArray("ids")
@@ -465,12 +416,6 @@ func CloneSprintWorkItemTask(c *gin.Context) {
 		}
 	}
 
-	err = commonutil.CheckZadigEnterpriseLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
-	}
-
 	ctx.Resp, ctx.RespErr = service.CloneSprintWorkItemTask(ctx, c.Query("taskID"))
 }
 
@@ -507,12 +452,6 @@ func ListSprintWorkItemTask(c *gin.Context) {
 			ctx.UnAuthorized = true
 			return
 		}
-	}
-
-	err = commonutil.CheckZadigEnterpriseLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
 	}
 
 	opt := new(service.ListSprintWorkItemTaskRequset)

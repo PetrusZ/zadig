@@ -22,7 +22,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
 	projectservice "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/project/service"
 	internalhandler "github.com/koderover/zadig/v2/pkg/shared/handler"
 	e "github.com/koderover/zadig/v2/pkg/tool/errors"
@@ -128,12 +127,6 @@ func GetBizDirProject(c *gin.Context) {
 		}
 	}
 
-	err = util.CheckZadigEnterpriseLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
-	}
-
 	ctx.Resp, ctx.RespErr = projectservice.GetBizDirProject()
 }
 
@@ -173,12 +166,6 @@ func GetBizDirProjectServices(c *gin.Context) {
 
 	if req.ProjectName == "" {
 		ctx.RespErr = e.ErrInvalidParam.AddDesc("invalid project name")
-		return
-	}
-
-	err = util.CheckZadigEnterpriseLicense()
-	if err != nil {
-		ctx.RespErr = err
 		return
 	}
 
@@ -224,12 +211,6 @@ func SearchBizDirByProject(c *gin.Context) {
 		return
 	}
 
-	err = util.CheckZadigEnterpriseLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
-	}
-
 	ctx.Resp, ctx.RespErr = projectservice.SearchBizDirByProject(req.ProjectName, req.Labels)
 }
 
@@ -269,12 +250,6 @@ func SearchBizDirByService(c *gin.Context) {
 	err = c.ShouldBindQuery(req)
 	if err != nil {
 		ctx.RespErr = e.ErrInvalidParam.AddDesc("invalid param, err: " + err.Error())
-		return
-	}
-
-	err = util.CheckZadigEnterpriseLicense()
-	if err != nil {
-		ctx.RespErr = err
 		return
 	}
 
@@ -323,12 +298,6 @@ func GetBizDirServiceDetail(c *gin.Context) {
 	serviceName := c.Query("serviceName")
 	if serviceName == "" {
 		ctx.RespErr = e.ErrInvalidParam.AddDesc("invalid service name")
-		return
-	}
-
-	err = util.CheckZadigEnterpriseLicense()
-	if err != nil {
-		ctx.RespErr = err
 		return
 	}
 

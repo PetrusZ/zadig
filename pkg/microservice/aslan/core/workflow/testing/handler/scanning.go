@@ -119,13 +119,6 @@ func CreateScanningModule(c *gin.Context) {
 		}
 	}
 
-	if err = commonutil.CheckZadigProfessionalLicense(); err != nil {
-		if args.CheckQualityGate == true || len(args.AdvancedSetting.NotifyCtls) != 0 {
-			ctx.RespErr = err
-			return
-		}
-	}
-
 	ctx.RespErr = service.CreateScanningModule(ctx.UserName, args, ctx.Logger)
 }
 
@@ -178,13 +171,6 @@ func UpdateScanningModule(c *gin.Context) {
 	if id == "" {
 		ctx.RespErr = MissingIDError
 		return
-	}
-
-	if err = commonutil.CheckZadigProfessionalLicense(); err != nil {
-		if args.CheckQualityGate == true || len(args.AdvancedSetting.NotifyCtls) != 0 {
-			ctx.RespErr = err
-			return
-		}
 	}
 
 	ctx.RespErr = service.UpdateScanningModule(id, ctx.UserName, args, ctx.Logger)

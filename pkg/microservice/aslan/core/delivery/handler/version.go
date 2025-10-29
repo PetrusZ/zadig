@@ -27,7 +27,6 @@ import (
 	"github.com/koderover/zadig/v2/pkg/types"
 
 	commonrepo "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/repository/mongodb"
-	commonutil "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
 	deliveryservice "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/delivery/service"
 	internalhandler "github.com/koderover/zadig/v2/pkg/shared/handler"
 	e "github.com/koderover/zadig/v2/pkg/tool/errors"
@@ -95,12 +94,6 @@ func GetDeliveryVersion(c *gin.Context) {
 		return
 	}
 
-	err = commonutil.CheckZadigProfessionalLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
-	}
-
 	version := new(commonrepo.DeliveryVersionArgs)
 	version.ID = ID
 	ctx.Resp, ctx.RespErr = deliveryservice.GetDetailReleaseData(version, ctx.Logger)
@@ -152,12 +145,6 @@ func ListDeliveryVersion(c *gin.Context) {
 	}
 	if len(args.Verbosity) == 0 {
 		args.Verbosity = deliveryservice.VerbosityDetailed
-	}
-
-	err = commonutil.CheckZadigProfessionalLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
 	}
 
 	var total int
@@ -301,12 +288,6 @@ func DeleteDeliveryVersion(c *gin.Context) {
 			ctx.UnAuthorized = true
 			return
 		}
-	}
-
-	err = commonutil.CheckZadigProfessionalLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
 	}
 
 	//params validate

@@ -22,7 +22,6 @@ import (
 	"github.com/gin-gonic/gin"
 
 	commonmodels "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/repository/models"
-	commonutil "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/system/service"
 	internalhandler "github.com/koderover/zadig/v2/pkg/shared/handler"
 	e "github.com/koderover/zadig/v2/pkg/tool/errors"
@@ -73,12 +72,6 @@ func CreateIMApp(c *gin.Context) {
 		return
 	}
 
-	err = commonutil.CheckZadigProfessionalLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
-	}
-
 	ctx.RespErr = service.CreateIMApp(&args, ctx.Logger)
 }
 
@@ -102,12 +95,6 @@ func UpdateIMApp(c *gin.Context) {
 	// authorization checks
 	if !ctx.Resources.IsSystemAdmin {
 		ctx.UnAuthorized = true
-		return
-	}
-
-	err = commonutil.CheckZadigProfessionalLicense()
-	if err != nil {
-		ctx.RespErr = err
 		return
 	}
 

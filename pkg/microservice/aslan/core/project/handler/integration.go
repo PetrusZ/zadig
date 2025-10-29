@@ -21,8 +21,6 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
-	commonutil "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/project/service"
 	"github.com/koderover/zadig/v2/pkg/microservice/systemconfig/core/codehost/repository/models"
 	internalhandler "github.com/koderover/zadig/v2/pkg/shared/handler"
@@ -165,13 +163,6 @@ func DeleteCodeHost(c *gin.Context) {
 		}
 	}
 
-	// license checks
-	err = util.CheckZadigEnterpriseLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
-	}
-
 	idParam := c.Param("id")
 	id, err := strconv.Atoi(idParam)
 	if err != nil {
@@ -207,13 +198,6 @@ func UpdateProjectCodeHost(c *gin.Context) {
 		return
 	}
 
-	// license checks
-	err = util.CheckZadigEnterpriseLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
-	}
-
 	// authorization checks
 	if !ctx.Resources.IsSystemAdmin {
 		if _, ok := ctx.Resources.ProjectAuthInfo[projectKey]; !ok {
@@ -238,12 +222,6 @@ func UpdateProjectCodeHost(c *gin.Context) {
 		return
 	}
 	req.ID = id
-
-	err = commonutil.CheckZadigEnterpriseLicense()
-	if err != nil {
-		ctx.RespErr = e.ErrLicenseInvalid.AddDesc("")
-		return
-	}
 
 	ctx.Resp, ctx.RespErr = service.UpdateProjectSystemCodeHost(projectKey, req, ctx.Logger)
 }

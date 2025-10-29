@@ -18,8 +18,6 @@ import (
 
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/config"
 	commonmodels "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/repository/models"
-	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
-	e "github.com/koderover/zadig/v2/pkg/tool/errors"
 	"github.com/koderover/zadig/v2/pkg/types"
 )
 
@@ -57,10 +55,6 @@ func (j UpdateEnvIstioConfigJobController) GetSpec() interface{} {
 }
 
 func (j UpdateEnvIstioConfigJobController) Validate(isExecution bool) error {
-	if err := util.CheckZadigProfessionalLicense(); err != nil {
-		return e.ErrLicenseInvalid.AddDesc("")
-	}
-
 	if j.jobSpec.GrayscaleStrategy == commonmodels.GrayscaleStrategyWeight {
 		weight := int32(0)
 		for _, config := range j.jobSpec.WeightConfigs {

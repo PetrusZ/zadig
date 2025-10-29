@@ -21,7 +21,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/service/kube"
-	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/environment/service"
 	"github.com/koderover/zadig/v2/pkg/setting"
 	internalhandler "github.com/koderover/zadig/v2/pkg/shared/handler"
@@ -71,10 +70,6 @@ func EnableIstioGrayscale(c *gin.Context) {
 				return
 			}
 		}
-	}
-
-	if ctx.RespErr = util.CheckZadigEnterpriseLicense(); ctx.RespErr != nil {
-		return
 	}
 
 	ctx.RespErr = service.EnableIstioGrayscale(c, envName, projectKey)
@@ -274,10 +269,6 @@ func SetIstioGrayscaleConfig(c *gin.Context) {
 		return
 	}
 
-	if ctx.RespErr = util.CheckZadigEnterpriseLicense(); ctx.RespErr != nil {
-		return
-	}
-
 	ctx.RespErr = service.SetIstioGrayscaleConfig(c, envName, projectKey, req)
 }
 
@@ -378,10 +369,6 @@ func SetupIstioGrayscalePortalService(c *gin.Context) {
 	err = c.ShouldBindJSON(&req)
 	if err != nil {
 		ctx.RespErr = e.ErrInvalidParam.AddErr(err)
-		return
-	}
-
-	if ctx.RespErr = util.CheckZadigEnterpriseLicense(); ctx.RespErr != nil {
 		return
 	}
 

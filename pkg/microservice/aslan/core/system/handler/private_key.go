@@ -27,7 +27,6 @@ import (
 	"github.com/koderover/zadig/v2/pkg/types"
 
 	commonmodels "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/repository/models"
-	commonutil "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/system/service"
 	internalhandler "github.com/koderover/zadig/v2/pkg/shared/handler"
 	e "github.com/koderover/zadig/v2/pkg/tool/errors"
@@ -282,12 +281,6 @@ func BatchCreatePrivateKey(c *gin.Context) {
 
 	if err := c.ShouldBindJSON(&args); err != nil {
 		ctx.RespErr = e.ErrInvalidParam.AddDesc("invalid PrivateKey args")
-		return
-	}
-
-	err = commonutil.CheckZadigProfessionalLicense()
-	if err != nil {
-		ctx.RespErr = err
 		return
 	}
 

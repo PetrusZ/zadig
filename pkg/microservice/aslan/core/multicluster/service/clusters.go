@@ -368,15 +368,6 @@ func CreateCluster(args *K8SCluster, logger *zap.SugaredLogger) (*commonmodels.K
 }
 
 func validateStrategies(strategies []*commonmodels.ScheduleStrategy) error {
-	err := commonutil.CheckZadigProfessionalLicense()
-	if err != nil {
-		for _, strategy := range strategies {
-			if strategy.Strategy == setting.RequiredSchedule || strategy.Tolerations != "" {
-				return e.ErrLicenseInvalid.AddDesc("")
-			}
-		}
-	}
-
 	names := make(map[string]struct{}, len(strategies))
 	defaultCount := 0
 	for _, strategy := range strategies {
@@ -678,20 +669,6 @@ func UpdateClusterStorage(ctx *handler.Context, id string, shareStorage *types.S
 func UpdateClusterDind(ctx *handler.Context, id string, dindCfg *commonmodels.DindCfg) (*commonmodels.K8SCluster, error) {
 	if dindCfg == nil {
 		return nil, fmt.Errorf("dindCfg is nil")
-	}
-
-	err := commonutil.CheckZadigProfessionalLicense()
-	if err != nil {
-		if dindCfg.Replicas != 1 {
-			return nil, e.ErrLicenseInvalid.AddDesc("")
-		}
-		if dindCfg.Resources != nil {
-			if dindCfg.Resources.Limits != nil {
-				if dindCfg.Resources.Limits.CPU != 4000 || dindCfg.Resources.Limits.Memory != 8192 {
-					return nil, e.ErrLicenseInvalid.AddDesc("")
-				}
-			}
-		}
 	}
 
 	s, err := kube.NewService("")

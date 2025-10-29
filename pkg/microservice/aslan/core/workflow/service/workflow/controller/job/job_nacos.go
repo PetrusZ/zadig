@@ -24,8 +24,6 @@ import (
 	commonmodels "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/repository/models"
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/repository/mongodb"
 	commonservice "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/service"
-	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
-	e "github.com/koderover/zadig/v2/pkg/tool/errors"
 	"github.com/koderover/zadig/v2/pkg/tool/log"
 	"github.com/koderover/zadig/v2/pkg/types"
 	"k8s.io/apimachinery/pkg/util/sets"
@@ -65,10 +63,6 @@ func (j NacosJobController) GetSpec() interface{} {
 }
 
 func (j NacosJobController) Validate(isExecution bool) error {
-	if err := util.CheckZadigProfessionalLicense(); err != nil {
-		return e.ErrLicenseInvalid.AddDesc("")
-	}
-
 	currJob, err := j.workflow.FindJob(j.name, j.jobType)
 	if err != nil {
 		return err

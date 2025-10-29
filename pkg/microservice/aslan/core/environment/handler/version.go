@@ -25,7 +25,6 @@ import (
 	"github.com/koderover/zadig/v2/pkg/types"
 
 	commonservice "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/service"
-	commonutil "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
 	"github.com/koderover/zadig/v2/pkg/setting"
 	internalhandler "github.com/koderover/zadig/v2/pkg/shared/handler"
 	e "github.com/koderover/zadig/v2/pkg/tool/errors"
@@ -75,12 +74,6 @@ func ListEnvServiceVersions(c *gin.Context) {
 					ctx.UnAuthorized = true
 					return
 				}
-			}
-
-			err = commonutil.CheckZadigProfessionalLicense()
-			if err != nil {
-				ctx.RespErr = err
-				return
 			}
 		} else {
 			if !ctx.Resources.ProjectAuthInfo[projectKey].IsProjectAdmin &&
@@ -155,12 +148,6 @@ func GetEnvServiceVersionYaml(c *gin.Context) {
 					ctx.UnAuthorized = true
 					return
 				}
-			}
-
-			err = commonutil.CheckZadigProfessionalLicense()
-			if err != nil {
-				ctx.RespErr = err
-				return
 			}
 		} else {
 			if !ctx.Resources.ProjectAuthInfo[projectKey].IsProjectAdmin &&
@@ -243,12 +230,6 @@ func DiffEnvServiceVersions(c *gin.Context) {
 					ctx.UnAuthorized = true
 					return
 				}
-			}
-
-			err = commonutil.CheckZadigProfessionalLicense()
-			if err != nil {
-				ctx.RespErr = err
-				return
 			}
 		} else {
 			if !ctx.Resources.ProjectAuthInfo[projectKey].IsProjectAdmin &&
@@ -372,11 +353,6 @@ func RollbackEnvServiceVersion(c *gin.Context) {
 	isHelmChart, err := strconv.ParseBool(c.Query("isHelmChart"))
 	if err != nil {
 		ctx.RespErr = e.ErrInvalidParam.AddErr(fmt.Errorf("invalid isHelmChart: %s", err))
-		return
-	}
-
-	if err := commonutil.CheckZadigProfessionalLicense(); err != nil {
-		ctx.RespErr = err
 		return
 	}
 

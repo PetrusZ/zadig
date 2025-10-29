@@ -27,7 +27,6 @@ import (
 	larkservice "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/service/lark"
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
 	"github.com/koderover/zadig/v2/pkg/setting"
-	e "github.com/koderover/zadig/v2/pkg/tool/errors"
 	"github.com/koderover/zadig/v2/pkg/tool/lark"
 	"github.com/koderover/zadig/v2/pkg/types"
 )
@@ -66,10 +65,6 @@ func (j ApprovalJobController) GetSpec() interface{} {
 }
 
 func (j ApprovalJobController) Validate(isExecution bool) error {
-	if err := util.CheckZadigProfessionalLicense(); err != nil {
-		return e.ErrLicenseInvalid.AddDesc("")
-	}
-
 	currJob, err := j.workflow.FindJob(j.name, j.jobType)
 	if err != nil {
 		return err
@@ -78,10 +73,6 @@ func (j ApprovalJobController) Validate(isExecution bool) error {
 	currJobSpec := new(commonmodels.ApprovalJobSpec)
 	if err := commonmodels.IToi(currJob.Spec, currJobSpec); err != nil {
 		return fmt.Errorf("failed to decode approval job spec, error: %s", err)
-	}
-
-	if err := util.CheckZadigProfessionalLicense(); err != nil {
-		return e.ErrLicenseInvalid.AddDesc("")
 	}
 
 	return nil

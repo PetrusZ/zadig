@@ -22,7 +22,6 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/repository/models"
-	commonutil "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/release_plan/service"
 	internalhandler "github.com/koderover/zadig/v2/pkg/shared/handler"
 	e "github.com/koderover/zadig/v2/pkg/tool/errors"
@@ -43,12 +42,6 @@ func GetReleasePlan(c *gin.Context) {
 		return
 	}
 
-	err = commonutil.CheckZadigEnterpriseLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
-	}
-
 	ctx.Resp, ctx.RespErr = service.GetReleasePlan(c.Param("id"))
 }
 
@@ -65,12 +58,6 @@ func GetReleasePlanLogs(c *gin.Context) {
 
 	if !ctx.Resources.IsSystemAdmin && !ctx.Resources.SystemActions.ReleasePlan.View {
 		ctx.UnAuthorized = true
-		return
-	}
-
-	err = commonutil.CheckZadigEnterpriseLicense()
-	if err != nil {
-		ctx.RespErr = err
 		return
 	}
 
@@ -99,12 +86,6 @@ func CreateReleasePlan(c *gin.Context) {
 		return
 	}
 
-	err = commonutil.CheckZadigEnterpriseLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
-	}
-
 	ctx.RespErr = service.CreateReleasePlan(ctx, req)
 }
 
@@ -121,12 +102,6 @@ func UpdateReleasePlan(c *gin.Context) {
 
 	if !ctx.Resources.IsSystemAdmin && !ctx.Resources.SystemActions.ReleasePlan.Edit {
 		ctx.UnAuthorized = true
-		return
-	}
-
-	err = commonutil.CheckZadigEnterpriseLicense()
-	if err != nil {
-		ctx.RespErr = err
 		return
 	}
 
@@ -153,12 +128,6 @@ func GetReleasePlanJobDetail(c *gin.Context) {
 		return
 	}
 
-	err = commonutil.CheckZadigEnterpriseLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
-	}
-
 	ctx.Resp, ctx.RespErr = service.GetReleasePlanJobDetail(c.Param("id"), c.Param("jobID"))
 }
 
@@ -177,12 +146,6 @@ func DeleteReleasePlan(c *gin.Context) {
 		return
 	}
 
-	err = commonutil.CheckZadigEnterpriseLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
-	}
-
 	ctx.RespErr = service.DeleteReleasePlan(c, ctx.UserName, c.Param("id"))
 }
 
@@ -192,12 +155,6 @@ func ExecuteReleaseJob(c *gin.Context) {
 	if err != nil {
 		ctx.RespErr = fmt.Errorf("authorization Info Generation failed: err %s", err)
 		ctx.UnAuthorized = true
-		return
-	}
-
-	err = commonutil.CheckZadigEnterpriseLicense()
-	if err != nil {
-		ctx.RespErr = err
 		return
 	}
 
@@ -221,12 +178,6 @@ func ScheduleExecuteReleasePlan(c *gin.Context) {
 		return
 	}
 
-	err = commonutil.CheckZadigEnterpriseLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
-	}
-
 	ctx.RespErr = service.ScheduleExecuteReleasePlan(ctx, c.Param("id"), c.Query("jobID"))
 }
 
@@ -236,12 +187,6 @@ func SkipReleaseJob(c *gin.Context) {
 	if err != nil {
 		ctx.RespErr = fmt.Errorf("authorization Info Generation failed: err %s", err)
 		ctx.UnAuthorized = true
-		return
-	}
-
-	err = commonutil.CheckZadigEnterpriseLicense()
-	if err != nil {
-		ctx.RespErr = err
 		return
 	}
 
@@ -266,12 +211,6 @@ func UpdateReleaseJobStatus(c *gin.Context) {
 		return
 	}
 
-	err = commonutil.CheckZadigEnterpriseLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
-	}
-
 	// only release plan manager can execute release job
 	// so no need to check authorization there
 	ctx.RespErr = service.UpdateReleasePlanStatus(ctx, c.Param("id"), c.Param("status"), ctx.Resources.IsSystemAdmin)
@@ -283,12 +222,6 @@ func ApproveReleasePlan(c *gin.Context) {
 	if err != nil {
 		ctx.RespErr = fmt.Errorf("authorization Info Generation failed: err %s", err)
 		ctx.UnAuthorized = true
-		return
-	}
-
-	err = commonutil.CheckZadigEnterpriseLicense()
-	if err != nil {
-		ctx.RespErr = err
 		return
 	}
 
@@ -324,12 +257,6 @@ func ListReleasePlans(c *gin.Context) {
 
 	if !ctx.Resources.IsSystemAdmin && !ctx.Resources.SystemActions.ReleasePlan.View {
 		ctx.UnAuthorized = true
-		return
-	}
-
-	err = commonutil.CheckZadigEnterpriseLicense()
-	if err != nil {
-		ctx.RespErr = err
 		return
 	}
 

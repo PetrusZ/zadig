@@ -20,7 +20,6 @@ import (
 	"github.com/gin-gonic/gin"
 
 	commonmodels "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/repository/models"
-	commonutil "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/system/service"
 	internalhandler "github.com/koderover/zadig/v2/pkg/shared/handler"
 	e "github.com/koderover/zadig/v2/pkg/tool/errors"
@@ -50,12 +49,6 @@ func CreateObservability(c *gin.Context) {
 		return
 	}
 
-	err := commonutil.CheckZadigProfessionalLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
-	}
-
 	ctx.RespErr = service.CreateObservability(&args)
 }
 
@@ -66,12 +59,6 @@ func UpdateObservability(c *gin.Context) {
 	var args commonmodels.Observability
 	if err := c.ShouldBindJSON(&args); err != nil {
 		ctx.RespErr = e.ErrInvalidParam.AddErr(err)
-		return
-	}
-
-	err := commonutil.CheckZadigProfessionalLicense()
-	if err != nil {
-		ctx.RespErr = err
 		return
 	}
 

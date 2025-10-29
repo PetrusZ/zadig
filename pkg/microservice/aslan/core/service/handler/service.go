@@ -32,7 +32,6 @@ import (
 	commonmodels "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/repository/models"
 	commonservice "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/service"
 	commontypes "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/types"
-	commonutil "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
 	svcservice "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/service/service"
 	"github.com/koderover/zadig/v2/pkg/setting"
 	internalhandler "github.com/koderover/zadig/v2/pkg/shared/handler"
@@ -72,14 +71,6 @@ func ListServiceTemplate(c *gin.Context) {
 				ctx.UnAuthorized = true
 				return
 			}
-		}
-	}
-
-	if production {
-		err = commonutil.CheckZadigProfessionalLicense()
-		if err != nil {
-			ctx.RespErr = err
-			return
 		}
 	}
 
@@ -128,14 +119,6 @@ func ListWorkloadTemplate(c *gin.Context) {
 		}
 	}
 
-	if production {
-		err = commonutil.CheckZadigProfessionalLicense()
-		if err != nil {
-			ctx.RespErr = err
-			return
-		}
-	}
-
 	// anyone with a token should be able to use this API
 	ctx.Resp, ctx.RespErr = commonservice.ListWorkloadTemplate(projectName, envName, production, ctx.Logger)
 }
@@ -177,14 +160,6 @@ func GetServiceTemplate(c *gin.Context) {
 					return
 				}
 			}
-		}
-	}
-
-	if production {
-		err = commonutil.CheckZadigProfessionalLicense()
-		if err != nil {
-			ctx.RespErr = err
-			return
 		}
 	}
 
@@ -251,14 +226,6 @@ func GetServiceTemplateOption(c *gin.Context) {
 	if !permitted {
 		ctx.UnAuthorized = true
 		return
-	}
-
-	if production {
-		err = commonutil.CheckZadigProfessionalLicense()
-		if err != nil {
-			ctx.RespErr = err
-			return
-		}
 	}
 
 	revision, err := strconv.ParseInt(c.DefaultQuery("revision", "0"), 10, 64)
@@ -341,14 +308,6 @@ func CreateServiceTemplate(c *gin.Context) {
 				ctx.UnAuthorized = true
 				return
 			}
-		}
-	}
-
-	if production {
-		err = commonutil.CheckZadigProfessionalLicense()
-		if err != nil {
-			ctx.RespErr = err
-			return
 		}
 	}
 
@@ -478,14 +437,6 @@ func UpdateServiceVariable(c *gin.Context) {
 		}
 	}
 
-	if production {
-		err = commonutil.CheckZadigProfessionalLicense()
-		if err != nil {
-			ctx.RespErr = err
-			return
-		}
-	}
-
 	servceTmplObjectargs.ProductName = c.Query("projectName")
 	servceTmplObjectargs.ServiceName = c.Param("name")
 	servceTmplObjectargs.Username = ctx.UserName
@@ -583,12 +534,6 @@ func HelmReleaseNaming(c *gin.Context) {
 				ctx.UnAuthorized = true
 				return
 			}
-
-			err = commonutil.CheckZadigProfessionalLicense()
-			if err != nil {
-				ctx.RespErr = err
-				return
-			}
 		} else {
 			if !ctx.Resources.ProjectAuthInfo[projectName].IsProjectAdmin &&
 				!ctx.Resources.ProjectAuthInfo[projectName].Service.Create &&
@@ -656,14 +601,6 @@ func DeleteServiceTemplate(c *gin.Context) {
 				ctx.UnAuthorized = true
 				return
 			}
-		}
-	}
-
-	if production {
-		err = commonutil.CheckZadigProfessionalLicense()
-		if err != nil {
-			ctx.RespErr = err
-			return
 		}
 	}
 
@@ -735,12 +672,6 @@ func UpdateWorkloads(c *gin.Context) {
 					return
 				}
 			}
-
-			err = commonutil.CheckZadigProfessionalLicense()
-			if err != nil {
-				ctx.RespErr = err
-				return
-			}
 		} else {
 			if !ctx.Resources.ProjectAuthInfo[projectName].IsProjectAdmin &&
 				!ctx.Resources.ProjectAuthInfo[projectName].Env.EditConfig {
@@ -808,14 +739,6 @@ func CreateK8sWorkloads(c *gin.Context) {
 				ctx.UnAuthorized = true
 				return
 			}
-		}
-	}
-
-	if production {
-		err = commonutil.CheckZadigProfessionalLicense()
-		if err != nil {
-			ctx.RespErr = err
-			return
 		}
 	}
 

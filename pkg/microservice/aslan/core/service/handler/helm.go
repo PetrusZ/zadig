@@ -24,7 +24,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/koderover/zadig/v2/pkg/types"
 
-	commonutil "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
 	svcservice "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/service/service"
 	internalhandler "github.com/koderover/zadig/v2/pkg/shared/handler"
 	e "github.com/koderover/zadig/v2/pkg/tool/errors"
@@ -65,14 +64,6 @@ func ListHelmServices(c *gin.Context) {
 		}
 	}
 
-	if production {
-		err = commonutil.CheckZadigProfessionalLicense()
-		if err != nil {
-			ctx.RespErr = err
-			return
-		}
-	}
-
 	ctx.Resp, ctx.RespErr = svcservice.ListHelmServices(projectKey, production, ctx.Logger)
 }
 
@@ -109,14 +100,6 @@ func GetHelmServiceModule(c *gin.Context) {
 				ctx.UnAuthorized = true
 				return
 			}
-		}
-	}
-
-	if production {
-		err = commonutil.CheckZadigProfessionalLicense()
-		if err != nil {
-			ctx.RespErr = err
-			return
 		}
 	}
 
@@ -161,14 +144,6 @@ func GetFilePath(c *gin.Context) {
 				ctx.UnAuthorized = true
 				return
 			}
-		}
-	}
-
-	if production {
-		err = commonutil.CheckZadigProfessionalLicense()
-		if err != nil {
-			ctx.RespErr = err
-			return
 		}
 	}
 
@@ -219,14 +194,6 @@ func GetFileContent(c *gin.Context) {
 		}
 	}
 
-	if production {
-		err = commonutil.CheckZadigProfessionalLicense()
-		if err != nil {
-			ctx.RespErr = err
-			return
-		}
-	}
-
 	param := new(svcservice.GetFileContentParam)
 	err = c.ShouldBindQuery(param)
 	if err != nil {
@@ -272,14 +239,6 @@ func UpdateFileContent(c *gin.Context) {
 				ctx.UnAuthorized = true
 				return
 			}
-		}
-	}
-
-	if production {
-		err = commonutil.CheckZadigProfessionalLicense()
-		if err != nil {
-			ctx.RespErr = err
-			return
 		}
 	}
 
@@ -340,12 +299,6 @@ func CreateOrUpdateHelmService(c *gin.Context) {
 				ctx.UnAuthorized = true
 				return
 			}
-
-			err = commonutil.CheckZadigProfessionalLicense()
-			if err != nil {
-				ctx.RespErr = err
-				return
-			}
 		} else {
 			if !ctx.Resources.ProjectAuthInfo[projectKey].IsProjectAdmin &&
 				!ctx.Resources.ProjectAuthInfo[projectKey].Service.Create {
@@ -404,12 +357,6 @@ func UpdateHelmService(c *gin.Context) {
 				!ctx.Resources.ProjectAuthInfo[projectKey].ProductionService.Create &&
 				!ctx.Resources.ProjectAuthInfo[projectKey].ProductionService.Edit {
 				ctx.UnAuthorized = true
-				return
-			}
-
-			err = commonutil.CheckZadigProfessionalLicense()
-			if err != nil {
-				ctx.RespErr = err
 				return
 			}
 		} else {
@@ -477,14 +424,6 @@ func CreateOrUpdateBulkHelmServices(c *gin.Context) {
 				ctx.UnAuthorized = true
 				return
 			}
-		}
-	}
-
-	if production {
-		err = commonutil.CheckZadigProfessionalLicense()
-		if err != nil {
-			ctx.RespErr = err
-			return
 		}
 	}
 

@@ -28,7 +28,6 @@ import (
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/repository/models/template"
 	commonservice "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/service"
 	commontypes "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/types"
-	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
 	projectservice "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/project/service"
 	internalhandler "github.com/koderover/zadig/v2/pkg/shared/handler"
 	e "github.com/koderover/zadig/v2/pkg/tool/errors"
@@ -189,13 +188,6 @@ func TransferProject(c *gin.Context) {
 			ctx.UnAuthorized = true
 			return
 		}
-	}
-
-	// license checks
-	err = util.CheckZadigEnterpriseLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
 	}
 
 	ctx.RespErr = projectservice.TransferHostProject(ctx.UserName, productName, ctx.Logger)
@@ -781,13 +773,6 @@ func CreateProjectGroup(c *gin.Context) {
 		}
 	}
 
-	// license checks
-	err = util.CheckZadigEnterpriseLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
-	}
-
 	args := new(projectservice.ProjectGroupArgs)
 	data, err := c.GetRawData()
 	if err != nil {
@@ -826,13 +811,6 @@ func UpdateProjectGroup(c *gin.Context) {
 			ctx.UnAuthorized = true
 			return
 		}
-	}
-
-	// license checks
-	err = util.CheckZadigEnterpriseLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
 	}
 
 	args := new(projectservice.ProjectGroupArgs)
@@ -875,13 +853,6 @@ func DeleteProjectGroup(c *gin.Context) {
 		}
 	}
 
-	// license checks
-	err = util.CheckZadigEnterpriseLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
-	}
-
 	groupName := c.Query("groupName")
 	if groupName == "" {
 		ctx.RespErr = e.ErrDeleteProjectGroup.AddErr(errors.New("group name is empty"))
@@ -912,13 +883,6 @@ func GetPresetProjectGroup(c *gin.Context) {
 	if err != nil {
 		ctx.RespErr = fmt.Errorf("authorization Info Generation failed: err %s", err)
 		ctx.UnAuthorized = true
-		return
-	}
-
-	// license checks
-	err = util.CheckZadigEnterpriseLicense()
-	if err != nil {
-		ctx.RespErr = err
 		return
 	}
 

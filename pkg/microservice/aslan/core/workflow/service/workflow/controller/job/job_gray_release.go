@@ -20,9 +20,7 @@ import (
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/config"
 	commonmodels "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/repository/models"
 	commonrepo "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/repository/mongodb"
-	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
 	"github.com/koderover/zadig/v2/pkg/tool/clientmanager"
-	e "github.com/koderover/zadig/v2/pkg/tool/errors"
 	"github.com/koderover/zadig/v2/pkg/tool/kube/getter"
 	"github.com/koderover/zadig/v2/pkg/types"
 )
@@ -66,10 +64,6 @@ type validateGrayReleaseJob struct {
 }
 
 func (j GrayReleaseJobController) Validate(isExecution bool) error {
-	if err := util.CheckZadigProfessionalLicense(); err != nil {
-		return e.ErrLicenseInvalid.AddDesc("")
-	}
-
 	// lint the first release job
 	if j.jobSpec.FromJob == "" {
 		jobRankMap := GetJobRankMap(j.workflow.Stages)

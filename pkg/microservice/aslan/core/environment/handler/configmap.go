@@ -25,7 +25,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/koderover/zadig/v2/pkg/types"
 
-	commonutil "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/environment/service"
 	"github.com/koderover/zadig/v2/pkg/setting"
 	internalhandler "github.com/koderover/zadig/v2/pkg/shared/handler"
@@ -61,12 +60,6 @@ func ListConfigMaps(c *gin.Context) {
 					ctx.UnAuthorized = true
 					return
 				}
-			}
-
-			err = commonutil.CheckZadigProfessionalLicense()
-			if err != nil {
-				ctx.RespErr = err
-				return
 			}
 		} else {
 			if !ctx.Resources.ProjectAuthInfo[projectKey].IsProjectAdmin &&
@@ -134,12 +127,6 @@ func RollBackConfigMap(c *gin.Context) {
 					return
 				}
 			}
-
-			err = commonutil.CheckZadigProfessionalLicense()
-			if err != nil {
-				ctx.RespErr = err
-				return
-			}
 		} else {
 			if !ctx.Resources.ProjectAuthInfo[args.ProductName].IsProjectAdmin &&
 				!ctx.Resources.ProjectAuthInfo[args.ProductName].Env.EditConfig {
@@ -189,12 +176,6 @@ func MigrateHistoryConfigMaps(c *gin.Context) {
 					ctx.UnAuthorized = true
 					return
 				}
-			}
-
-			err = commonutil.CheckZadigProfessionalLicense()
-			if err != nil {
-				ctx.RespErr = err
-				return
 			}
 		} else {
 			if !ctx.Resources.ProjectAuthInfo[projectKey].IsProjectAdmin &&

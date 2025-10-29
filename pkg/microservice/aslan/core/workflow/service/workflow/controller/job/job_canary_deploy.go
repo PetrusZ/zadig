@@ -24,10 +24,8 @@ import (
 
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/config"
 	commonmodels "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/repository/models"
-	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
 	"github.com/koderover/zadig/v2/pkg/setting"
 	"github.com/koderover/zadig/v2/pkg/tool/clientmanager"
-	e "github.com/koderover/zadig/v2/pkg/tool/errors"
 	"github.com/koderover/zadig/v2/pkg/tool/kube/getter"
 	"github.com/koderover/zadig/v2/pkg/types"
 )
@@ -66,10 +64,6 @@ func (j CanaryDeployJobController) GetSpec() interface{} {
 }
 
 func (j CanaryDeployJobController) Validate(isExecution bool) error {
-	if err := util.CheckZadigProfessionalLicense(); err != nil {
-		return e.ErrLicenseInvalid.AddDesc("")
-	}
-
 	quoteJobs := make([]*commonmodels.Job, 0)
 	for _, stage := range j.workflow.Stages {
 		for _, job := range stage.Jobs {
@@ -145,7 +139,7 @@ func (j CanaryDeployJobController) Update(useUserInput bool, ticket *commonmodel
 
 	j.jobSpec.DockerRegistryID = currJobSpec.DockerRegistryID
 	j.jobSpec.Namespace = currJobSpec.Namespace
-	j.jobSpec.ClusterID = currJobSpec.ClusterID 
+	j.jobSpec.ClusterID = currJobSpec.ClusterID
 
 	// TODO: recalculate the resources in the namespace, for now we just use the configured options
 	j.jobSpec.TargetOptions = currJobSpec.TargetOptions

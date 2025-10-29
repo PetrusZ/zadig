@@ -22,7 +22,6 @@ import (
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/config"
 	commonmodels "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/repository/models"
 	commonrepo "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/repository/mongodb"
-	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
 	"github.com/koderover/zadig/v2/pkg/types"
 )
 
@@ -60,10 +59,6 @@ func (j MeegoTransitionJobController) GetSpec() interface{} {
 }
 
 func (j MeegoTransitionJobController) Validate(isExecution bool) error {
-	if err := util.CheckZadigEnterpriseLicense(); err != nil {
-		return err
-	}
-
 	return nil
 }
 

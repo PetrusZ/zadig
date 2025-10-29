@@ -22,7 +22,6 @@ import (
 	"github.com/gin-gonic/gin"
 	commonmodels "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/repository/models"
 
-	commonutil "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
 	ticketservice "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/ticket/service"
 	internalhandler "github.com/koderover/zadig/v2/pkg/shared/handler"
 	e "github.com/koderover/zadig/v2/pkg/tool/errors"
@@ -48,12 +47,6 @@ func OpenAPICreateApprovalTicket(c *gin.Context) {
 	isValid, err := args.Validate()
 	if !isValid {
 		ctx.RespErr = e.ErrInvalidParam.AddDesc(err.Error())
-		return
-	}
-
-	err = commonutil.CheckZadigProfessionalLicense()
-	if err != nil {
-		ctx.RespErr = err
 		return
 	}
 

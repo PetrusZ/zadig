@@ -26,9 +26,7 @@ import (
 	commonmodels "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/repository/models"
 	commonrepo "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/repository/mongodb"
 	commonservice "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/service"
-	commonutil "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
 	codehostrepo "github.com/koderover/zadig/v2/pkg/microservice/systemconfig/core/codehost/repository/mongodb"
-	e "github.com/koderover/zadig/v2/pkg/tool/errors"
 	"github.com/koderover/zadig/v2/pkg/tool/log"
 	"github.com/koderover/zadig/v2/pkg/types"
 	steptypes "github.com/koderover/zadig/v2/pkg/types/step"
@@ -76,10 +74,6 @@ func (j FreestyleJobController) Validate(isExecution bool) error {
 	}
 
 	if j.jobSpec.FreestyleJobType == config.ServiceFreeStyleJobType {
-		err := commonutil.CheckZadigProfessionalLicense()
-		if err != nil {
-			return e.ErrLicenseInvalid.AddDesc("")
-		}
 	}
 
 	err := checkOutputNames(j.jobSpec.AdvancedSetting.Outputs)

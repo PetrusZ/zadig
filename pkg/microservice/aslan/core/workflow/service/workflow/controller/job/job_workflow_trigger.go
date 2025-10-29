@@ -22,8 +22,6 @@ import (
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/config"
 	commonmodels "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/repository/models"
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/repository/mongodb"
-	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
-	e "github.com/koderover/zadig/v2/pkg/tool/errors"
 	"github.com/koderover/zadig/v2/pkg/types"
 	"k8s.io/apimachinery/pkg/util/sets"
 )
@@ -62,10 +60,6 @@ func (j WorkflowTriggerJobController) GetSpec() interface{} {
 }
 
 func (j WorkflowTriggerJobController) Validate(isExecution bool) error {
-	if err := util.CheckZadigProfessionalLicense(); err != nil {
-		return e.ErrLicenseInvalid.AddDesc("")
-	}
-
 	workflowSet := sets.NewString(j.workflow.Name)
 	// every workflow only need check loop once
 	checkedWorkflow := sets.NewString()

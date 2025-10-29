@@ -21,8 +21,6 @@ import (
 
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/config"
 	commonmodels "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/repository/models"
-	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
-	e "github.com/koderover/zadig/v2/pkg/tool/errors"
 	"github.com/koderover/zadig/v2/pkg/types"
 )
 
@@ -60,10 +58,6 @@ func (j GrafanaJobController) GetSpec() interface{} {
 }
 
 func (j GrafanaJobController) Validate(isExecution bool) error {
-	if err := util.CheckZadigProfessionalLicense(); err != nil {
-		return e.ErrLicenseInvalid.AddDesc("")
-	}
-
 	latestJob, err := j.workflow.FindJob(j.name, j.jobType)
 	if err != nil {
 		return fmt.Errorf("failed to find job: %s in workflow %s's latest config, error: %s", j.name, j.workflow.Name, err)

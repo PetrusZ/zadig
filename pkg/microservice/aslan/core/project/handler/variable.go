@@ -20,7 +20,6 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
-	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
 
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/project/service"
 	internalhandler "github.com/koderover/zadig/v2/pkg/shared/handler"
@@ -75,13 +74,6 @@ func CreateVariableSet(c *gin.Context) {
 		}
 	}
 
-	// license checks
-	err = util.CheckZadigProfessionalLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
-	}
-
 	args := &service.CreateVariableSetRequest{}
 	err = c.BindJSON(args)
 	if err != nil {
@@ -120,19 +112,13 @@ func UpdateVariableSet(c *gin.Context) {
 		}
 	}
 
-	// license checks
-	err = util.CheckZadigProfessionalLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
-	}
-
 	args := &service.CreateVariableSetRequest{}
 	err = c.BindJSON(args)
 	if err != nil {
 		ctx.RespErr = e.ErrInvalidParam.AddDesc(err.Error())
 		return
 	}
+
 	args.UserName = ctx.UserName
 	args.ID = c.Param("id")
 	args.ProjectName = projectKey
@@ -164,13 +150,6 @@ func DeleteVariableSet(c *gin.Context) {
 			ctx.UnAuthorized = true
 			return
 		}
-	}
-
-	// license checks
-	err = util.CheckZadigProfessionalLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
 	}
 
 	ctx.RespErr = service.DeleteVariableSet(c.Param("id"), projectKey, ctx.Logger)

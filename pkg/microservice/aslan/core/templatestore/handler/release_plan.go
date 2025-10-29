@@ -22,7 +22,6 @@ import (
 	"github.com/gin-gonic/gin"
 
 	commonmodels "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/repository/models"
-	commonutil "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
 	templateservice "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/templatestore/service"
 	internalhandler "github.com/koderover/zadig/v2/pkg/shared/handler"
 	e "github.com/koderover/zadig/v2/pkg/tool/errors"
@@ -112,11 +111,6 @@ func CreateReleasePlanTemplate(c *gin.Context) {
 		}
 	}
 
-	if err = commonutil.CheckZadigProfessionalLicense(); err != nil {
-		ctx.RespErr = err
-		return
-	}
-
 	args := new(commonmodels.ReleasePlanTemplate)
 
 	if err := c.ShouldBindJSON(&args); err != nil {
@@ -151,11 +145,6 @@ func UpdateReleasePlanTemplate(c *gin.Context) {
 			ctx.UnAuthorized = true
 			return
 		}
-	}
-
-	if err = commonutil.CheckZadigProfessionalLicense(); err != nil {
-		ctx.RespErr = err
-		return
 	}
 
 	args := new(commonmodels.ReleasePlanTemplate)

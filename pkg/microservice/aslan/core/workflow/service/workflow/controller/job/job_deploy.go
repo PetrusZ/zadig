@@ -30,9 +30,7 @@ import (
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/service/kube"
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/service/repository"
 	commontypes "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/types"
-	aslanUtil "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
 	"github.com/koderover/zadig/v2/pkg/setting"
-	e "github.com/koderover/zadig/v2/pkg/tool/errors"
 	helmtool "github.com/koderover/zadig/v2/pkg/tool/helmclient"
 	"github.com/koderover/zadig/v2/pkg/tool/log"
 	"github.com/koderover/zadig/v2/pkg/types"
@@ -74,18 +72,6 @@ func (j DeployJobController) GetSpec() interface{} {
 }
 
 func (j DeployJobController) Validate(isExecution bool) error {
-	if err := aslanUtil.CheckZadigProfessionalLicense(); err != nil {
-		if j.jobSpec.Production {
-			return e.ErrLicenseInvalid.AddDesc("生产环境功能需要专业版才能使用")
-		}
-
-		for _, item := range j.jobSpec.DeployContents {
-			if item == config.DeployVars || item == config.DeployConfig {
-				return e.ErrLicenseInvalid.AddDesc("基础版仅能部署镜像")
-			}
-		}
-	}
-
 	if j.jobSpec.Source != config.SourceFromJob {
 		return nil
 	}

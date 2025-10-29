@@ -27,7 +27,6 @@ import (
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/config"
 	commonmodels "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/repository/models"
 	templaterepo "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/repository/mongodb/template"
-	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
 	"github.com/koderover/zadig/v2/pkg/setting"
 	"github.com/koderover/zadig/v2/pkg/tool/kube/serializer"
 	"github.com/koderover/zadig/v2/pkg/types"
@@ -67,10 +66,6 @@ func (j MseGrayReleaseJobController) GetSpec() interface{} {
 }
 
 func (j MseGrayReleaseJobController) Validate(isExecution bool) error {
-	if err := util.CheckZadigEnterpriseLicense(); err != nil {
-		return err
-	}
-
 	if j.jobSpec.GrayTag == types.ZadigReleaseVersionOriginal {
 		return fmt.Errorf("gray tag must not be 'original'")
 	}

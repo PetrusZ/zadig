@@ -24,7 +24,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	commonservice "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/service"
-	commonutil "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/environment/service"
 	"github.com/koderover/zadig/v2/pkg/setting"
 	internalhandler "github.com/koderover/zadig/v2/pkg/shared/handler"
@@ -125,12 +124,6 @@ func GetService(c *gin.Context) {
 			if editPermitted {
 				permitted = true
 			}
-
-			err = commonutil.CheckZadigProfessionalLicense()
-			if err != nil {
-				ctx.RespErr = err
-				return
-			}
 		} else {
 			if projectedAuthInfo.Env.View ||
 				projectedAuthInfo.Env.ManagePods {
@@ -186,11 +179,6 @@ func RestartService(c *gin.Context) {
 					ctx.UnAuthorized = true
 					return
 				}
-			}
-
-			if err := commonutil.CheckZadigProfessionalLicense(); err != nil {
-				ctx.RespErr = err
-				return
 			}
 		} else {
 			if !ctx.Resources.ProjectAuthInfo[projectKey].IsProjectAdmin &&
@@ -259,12 +247,6 @@ func FetchServiceYaml(c *gin.Context) {
 					return
 				}
 			}
-
-			err = commonutil.CheckZadigProfessionalLicense()
-			if err != nil {
-				ctx.RespErr = err
-				return
-			}
 		} else {
 			if !ctx.Resources.ProjectAuthInfo[projectKey].IsProjectAdmin &&
 				!ctx.Resources.ProjectAuthInfo[projectKey].Env.View {
@@ -323,13 +305,7 @@ func BatchPreviewServices(c *gin.Context) {
 		return
 	}
 
-	production := c.Query("production") == "true"
-	if production {
-		if err := commonutil.CheckZadigProfessionalLicense(); err != nil {
-			ctx.RespErr = err
-			return
-		}
-	}
+	// production := c.Query("production") == "true"
 
 	for _, arg := range args {
 		arg.ProductName = c.Query("projectName")
@@ -382,11 +358,6 @@ func UpdateService(c *gin.Context) {
 					ctx.UnAuthorized = true
 					return
 				}
-			}
-
-			if err := commonutil.CheckZadigProfessionalLicense(); err != nil {
-				ctx.RespErr = err
-				return
 			}
 		} else {
 			if !ctx.Resources.ProjectAuthInfo[projectKey].IsProjectAdmin &&
@@ -477,12 +448,6 @@ func RestartWorkload(c *gin.Context) {
 					return
 				}
 			}
-
-			err = commonutil.CheckZadigProfessionalLicense()
-			if err != nil {
-				ctx.RespErr = err
-				return
-			}
 		} else {
 			if !ctx.Resources.ProjectAuthInfo[projectKey].IsProjectAdmin &&
 				!ctx.Resources.ProjectAuthInfo[projectKey].Env.ManagePods {
@@ -533,11 +498,6 @@ func ScaleNewService(c *gin.Context) {
 					ctx.UnAuthorized = true
 					return
 				}
-			}
-
-			if err := commonutil.CheckZadigProfessionalLicense(); err != nil {
-				ctx.RespErr = err
-				return
 			}
 		} else {
 			if !ctx.Resources.ProjectAuthInfo[projectKey].IsProjectAdmin &&

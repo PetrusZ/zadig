@@ -24,7 +24,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/koderover/zadig/v2/pkg/types"
 
-	commonutil "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
 	svcservice "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/service/service"
 	internalhandler "github.com/koderover/zadig/v2/pkg/shared/handler"
 	e "github.com/koderover/zadig/v2/pkg/tool/errors"
@@ -161,13 +160,6 @@ func LoadServiceTemplate(c *gin.Context) {
 		}
 	}
 
-	if production {
-		if err := commonutil.CheckZadigProfessionalLicense(); err != nil {
-			ctx.RespErr = err
-			return
-		}
-	}
-
 	ctx.RespErr = svcservice.LoadServiceFromCodeHost(ctx.UserName, codehostID, repoOwner, namespace, repoName, repoUUID, branchName, remoteName, args, false, false, production, ctx.Logger)
 }
 
@@ -260,13 +252,6 @@ func SyncServiceTemplate(c *gin.Context) {
 				ctx.UnAuthorized = true
 				return
 			}
-		}
-	}
-
-	if production {
-		if err := commonutil.CheckZadigProfessionalLicense(); err != nil {
-			ctx.RespErr = err
-			return
 		}
 	}
 

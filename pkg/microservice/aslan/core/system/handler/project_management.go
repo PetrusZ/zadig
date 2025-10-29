@@ -24,7 +24,6 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/repository/models"
-	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/system/service"
 	"github.com/koderover/zadig/v2/pkg/setting"
 	internalhandler "github.com/koderover/zadig/v2/pkg/shared/handler"
@@ -106,12 +105,6 @@ func CreateProjectManagement(c *gin.Context) {
 		return
 	}
 
-	err = util.CheckZadigEnterpriseLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
-	}
-
 	ctx.RespErr = service.CreateProjectManagement(req, ctx.Logger)
 }
 
@@ -133,12 +126,6 @@ func UpdateProjectManagement(c *gin.Context) {
 
 	req := new(models.ProjectManagement)
 	if err := c.ShouldBindJSON(req); err != nil {
-		ctx.RespErr = err
-		return
-	}
-
-	err = util.CheckZadigEnterpriseLicense()
-	if err != nil {
 		ctx.RespErr = err
 		return
 	}

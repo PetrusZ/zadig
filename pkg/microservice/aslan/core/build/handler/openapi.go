@@ -21,7 +21,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	buildservice "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/build/service"
-	commonutil "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
 	internalhandler "github.com/koderover/zadig/v2/pkg/shared/handler"
 	e "github.com/koderover/zadig/v2/pkg/tool/errors"
 	"github.com/koderover/zadig/v2/pkg/types"
@@ -63,12 +62,6 @@ func OpenAPICreateBuildModule(c *gin.Context) {
 		isValid, err := args.Validate()
 		if !isValid {
 			ctx.RespErr = e.ErrInvalidParam.AddDesc(err.Error())
-			return
-		}
-
-		err = commonutil.CheckZadigProfessionalLicense()
-		if err != nil {
-			ctx.RespErr = err
 			return
 		}
 

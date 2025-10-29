@@ -24,7 +24,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	commonutil "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/environment/service"
 	"github.com/koderover/zadig/v2/pkg/setting"
 	internalhandler "github.com/koderover/zadig/v2/pkg/shared/handler"
@@ -79,12 +78,6 @@ func UpdateStatefulSetContainerImage(c *gin.Context) {
 					ctx.UnAuthorized = true
 					return
 				}
-			}
-
-			err = commonutil.CheckZadigProfessionalLicense()
-			if err != nil {
-				ctx.RespErr = err
-				return
 			}
 		} else {
 			if !ctx.Resources.ProjectAuthInfo[args.ProductName].IsProjectAdmin &&
@@ -159,12 +152,6 @@ func UpdateDeploymentContainerImage(c *gin.Context) {
 						permitted = collabPermittedManagePod
 					}
 				}
-			}
-
-			err = commonutil.CheckZadigProfessionalLicense()
-			if err != nil {
-				ctx.RespErr = err
-				return
 			}
 		} else {
 			if projectAuthInfo.IsProjectAdmin {
@@ -246,12 +233,6 @@ func UpdateCronJobContainerImage(c *gin.Context) {
 					ctx.UnAuthorized = true
 					return
 				}
-			}
-
-			err = commonutil.CheckZadigProfessionalLicense()
-			if err != nil {
-				ctx.RespErr = err
-				return
 			}
 		} else {
 			if !ctx.Resources.ProjectAuthInfo[args.ProductName].IsProjectAdmin &&

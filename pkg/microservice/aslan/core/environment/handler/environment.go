@@ -38,7 +38,6 @@ import (
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/repository/mongodb"
 	commonservice "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/service"
 	commontypes "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/types"
-	commonutil "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/environment/service"
 	"github.com/koderover/zadig/v2/pkg/setting"
 	"github.com/koderover/zadig/v2/pkg/shared/client/plutusvendor"
@@ -162,14 +161,6 @@ func UpdateMultiProducts(c *gin.Context) {
 	}
 
 	production := c.Query("production") == "true"
-	if production {
-		err = commonutil.CheckZadigProfessionalLicense()
-		if err != nil {
-			ctx.RespErr = err
-			return
-		}
-	}
-
 	// this function has several implementations, we do the authorization checks in the individual function.
 	updateMultiEnvWrapper(c, request, production, ctx)
 }
@@ -262,12 +253,6 @@ func CreateProduct(c *gin.Context) {
 			if !ctx.Resources.ProjectAuthInfo[createParam.ProjectName].IsProjectAdmin &&
 				!ctx.Resources.ProjectAuthInfo[createParam.ProjectName].ProductionEnv.Create {
 				ctx.UnAuthorized = true
-				return
-			}
-
-			err = commonutil.CheckZadigProfessionalLicense()
-			if err != nil {
-				ctx.RespErr = err
 				return
 			}
 		} else {
@@ -535,11 +520,6 @@ func UpdateProductRegistry(c *gin.Context) {
 					return
 				}
 			}
-
-			if err := commonutil.CheckZadigProfessionalLicense(); err != nil {
-				ctx.RespErr = err
-				return
-			}
 		} else {
 			if !ctx.Resources.ProjectAuthInfo[projectKey].IsProjectAdmin &&
 				!ctx.Resources.ProjectAuthInfo[projectKey].Env.EditConfig {
@@ -642,12 +622,6 @@ func UpdateProductAlias(c *gin.Context) {
 					return
 				}
 			}
-
-			err = commonutil.CheckZadigProfessionalLicense()
-			if err != nil {
-				ctx.RespErr = err
-				return
-			}
 		} else {
 			if !ctx.Resources.ProjectAuthInfo[projectKey].IsProjectAdmin &&
 				!ctx.Resources.ProjectAuthInfo[projectKey].Env.EditConfig {
@@ -726,13 +700,6 @@ func EstimatedValues(c *gin.Context) {
 	updateServiceRevision := c.Query("updateServiceRevision")
 	production := c.Query("production") == "true"
 	arg.Production = production
-	if production {
-		err := commonutil.CheckZadigProfessionalLicense()
-		if err != nil {
-			ctx.RespErr = err
-			return
-		}
-	}
 
 	ctx.Resp, ctx.RespErr = service.GenEstimatedValues(projectName, envName, serviceName, service.EstimateValuesScene(c.Query("scene")), service.EstimateValuesResponseFormat(c.Query("format")), arg, updateServiceRevision == "true", production, isHelmChartDeploy == "true", config.ValueMergeStrategy(valueMergeStrategy), ctx.Logger)
 }
@@ -854,19 +821,6 @@ func UpdateHelmProductDefaultValues(c *gin.Context) {
 		return
 	}
 
-	licenseStatus, err := plutusvendor.New().CheckZadigXLicenseStatus()
-	if err != nil {
-		ctx.RespErr = fmt.Errorf("failed to validate zadig license status, error: %s", err)
-		return
-	}
-
-	if arg.ValuesData != nil && arg.ValuesData.AutoSync {
-		if !commonutil.ValidateZadigProfessionalLicense(licenseStatus) {
-			ctx.RespErr = e.ErrLicenseInvalid.AddDesc("")
-			return
-		}
-	}
-
 	arg.DeployType = setting.HelmDeployType
 	ctx.RespErr = service.UpdateProductDefaultValues(projectKey, envName, ctx.UserName, ctx.RequestID, arg, production, ctx.Logger)
 }
@@ -910,12 +864,6 @@ func PreviewHelmProductDefaultValues(c *gin.Context) {
 					ctx.UnAuthorized = true
 					return
 				}
-			}
-
-			err := commonutil.CheckZadigProfessionalLicense()
-			if err != nil {
-				ctx.RespErr = err
-				return
 			}
 		} else {
 			if !ctx.Resources.ProjectAuthInfo[projectKey].IsProjectAdmin &&
@@ -970,12 +918,6 @@ func PreviewGlobalVariables(c *gin.Context) {
 					ctx.UnAuthorized = true
 					return
 				}
-			}
-
-			err := commonutil.CheckZadigProfessionalLicense()
-			if err != nil {
-				ctx.RespErr = err
-				return
 			}
 		} else {
 			if !ctx.Resources.ProjectAuthInfo[projectKey].IsProjectAdmin &&
@@ -1049,11 +991,6 @@ func UpdateK8sProductGlobalVariables(c *gin.Context) {
 					ctx.UnAuthorized = true
 					return
 				}
-			}
-
-			if err := commonutil.CheckZadigProfessionalLicense(); err != nil {
-				ctx.RespErr = err
-				return
 			}
 		} else {
 			if !ctx.Resources.ProjectAuthInfo[projectKey].IsProjectAdmin &&
@@ -1137,11 +1074,6 @@ func UpdateHelmProductCharts(c *gin.Context) {
 					ctx.UnAuthorized = true
 					return
 				}
-			}
-
-			if err := commonutil.CheckZadigProfessionalLicense(); err != nil {
-				ctx.RespErr = err
-				return
 			}
 		} else {
 			if !ctx.Resources.ProjectAuthInfo[projectKey].IsProjectAdmin &&
@@ -1371,20 +1303,6 @@ func updateMultiHelmChartEnv(c *gin.Context, request *service.UpdateEnvRequest, 
 		return
 	}
 
-	licenseStatus, err := plutusvendor.New().CheckZadigXLicenseStatus()
-	if err != nil {
-		ctx.RespErr = fmt.Errorf("failed to validate zadig license status, error: %s", err)
-		return
-	}
-	for _, chartValue := range args.ChartValues {
-		if chartValue.DeployStrategy == setting.ServiceDeployStrategyImport {
-			if !commonutil.ValidateZadigProfessionalLicense(licenseStatus) {
-				ctx.RespErr = e.ErrLicenseInvalid.AddDesc("")
-				return
-			}
-		}
-	}
-
 	ctx.Resp, ctx.RespErr = service.UpdateMultipleHelmChartEnv(
 		ctx.RequestID, ctx.UserName, args, production, ctx.Logger,
 	)
@@ -1472,12 +1390,6 @@ func GetEnvironment(c *gin.Context) {
 					return
 				}
 			}
-
-			err = commonutil.CheckZadigProfessionalLicense()
-			if err != nil {
-				ctx.RespErr = err
-				return
-			}
 		} else {
 			if !ctx.Resources.ProjectAuthInfo[projectKey].IsProjectAdmin &&
 				!ctx.Resources.ProjectAuthInfo[projectKey].Env.View {
@@ -1531,12 +1443,6 @@ func GetEstimatedRenderCharts(c *gin.Context) {
 					ctx.UnAuthorized = true
 					return
 				}
-			}
-
-			err = commonutil.CheckZadigProfessionalLicense()
-			if err != nil {
-				ctx.RespErr = err
-				return
 			}
 		} else {
 			if !ctx.Resources.ProjectAuthInfo[projectKey].IsProjectAdmin &&
@@ -1601,11 +1507,6 @@ func DeleteProduct(c *gin.Context) {
 			if !ctx.Resources.ProjectAuthInfo[projectKey].IsProjectAdmin &&
 				!ctx.Resources.ProjectAuthInfo[projectKey].ProductionEnv.Delete {
 				ctx.UnAuthorized = true
-				return
-			}
-
-			if err := commonutil.CheckZadigProfessionalLicense(); err != nil {
-				ctx.RespErr = err
 				return
 			}
 		} else {
@@ -1693,11 +1594,6 @@ func DeleteProductServices(c *gin.Context) {
 	}
 
 	if production {
-		err = commonutil.CheckZadigProfessionalLicense()
-		if err != nil {
-			ctx.RespErr = err
-			return
-		}
 	} else {
 		// For environment sharing, if the environment is the base environment and the service to be deleted has been deployed in the subenvironment,
 		// we should prompt the user that `Delete the service in the subenvironment before deleting the service in the base environment`.
@@ -1767,11 +1663,6 @@ func DeleteHelmReleases(c *gin.Context) {
 					return
 				}
 			}
-
-			if err := commonutil.CheckZadigProfessionalLicense(); err != nil {
-				ctx.RespErr = err
-				return
-			}
 		} else {
 			if !ctx.Resources.ProjectAuthInfo[projectKey].IsProjectAdmin &&
 				!ctx.Resources.ProjectAuthInfo[projectKey].Env.EditConfig {
@@ -1782,11 +1673,6 @@ func DeleteHelmReleases(c *gin.Context) {
 				}
 			}
 		}
-	}
-
-	if err := commonutil.CheckZadigProfessionalLicense(); err != nil {
-		ctx.RespErr = err
-		return
 	}
 
 	ctx.RespErr = service.DeleteProductHelmReleases(ctx.UserName, ctx.RequestID, envName, projectKey, releaseNameArr, production, isDelete, ctx.Logger)
@@ -1828,11 +1714,6 @@ func ListGroups(c *gin.Context) {
 					ctx.UnAuthorized = true
 					return
 				}
-			}
-
-			if err := commonutil.CheckZadigProfessionalLicense(); err != nil {
-				ctx.RespErr = err
-				return
 			}
 		} else {
 			if !ctx.Resources.ProjectAuthInfo[envGroupRequest.ProjectName].IsProjectAdmin &&
@@ -1970,11 +1851,6 @@ func ListWorkloadsInEnv(c *gin.Context) {
 					return
 				}
 			}
-
-			if err := commonutil.CheckZadigProfessionalLicense(); err != nil {
-				ctx.RespErr = err
-				return
-			}
 		} else {
 			if !ctx.Resources.ProjectAuthInfo[projectKey].IsProjectAdmin &&
 				!ctx.Resources.ProjectAuthInfo[projectKey].Env.View {
@@ -2069,12 +1945,6 @@ func GetEnvConfigs(c *gin.Context) {
 					return
 				}
 			}
-
-			err = commonutil.CheckZadigProfessionalLicense()
-			if err != nil {
-				ctx.RespErr = err
-				return
-			}
 		} else {
 			if !ctx.Resources.ProjectAuthInfo[projectKey].IsProjectAdmin &&
 				!ctx.Resources.ProjectAuthInfo[projectKey].Env.View {
@@ -2142,11 +2012,6 @@ func UpdateEnvConfigs(c *gin.Context) {
 					ctx.UnAuthorized = true
 					return
 				}
-			}
-
-			if err := commonutil.CheckZadigProfessionalLicense(); err != nil {
-				ctx.RespErr = err
-				return
 			}
 		} else {
 			if !ctx.Resources.ProjectAuthInfo[projectKey].IsProjectAdmin &&
@@ -2496,12 +2361,6 @@ func EnvSleep(c *gin.Context) {
 					permitted = true
 				}
 			}
-
-			err = commonutil.CheckZadigProfessionalLicense()
-			if err != nil {
-				ctx.RespErr = err
-				return
-			}
 		} else {
 			// first check if the user is projectAdmin
 			if projectAuthInfo.IsProjectAdmin {
@@ -2576,12 +2435,6 @@ func GetEnvSleepCron(c *gin.Context) {
 				if err == nil && collaborationAuthorizedView {
 					permitted = true
 				}
-			}
-
-			err = commonutil.CheckZadigProfessionalLicense()
-			if err != nil {
-				ctx.RespErr = err
-				return
 			}
 		} else {
 			// first check if the user is projectAdmin
@@ -2673,12 +2526,6 @@ func UpsertEnvSleepCron(c *gin.Context) {
 				if err == nil && collaborationAuthorizedEdit {
 					permitted = true
 				}
-			}
-
-			err = commonutil.CheckZadigProfessionalLicense()
-			if err != nil {
-				ctx.RespErr = err
-				return
 			}
 		} else {
 			// first check if the user is projectAdmin
@@ -2883,12 +2730,6 @@ func CreateSAEEnv(c *gin.Context) {
 				return
 			}
 		}
-	}
-
-	err = commonutil.CheckZadigLicenseFeatureSae()
-	if err != nil {
-		ctx.RespErr = err
-		return
 	}
 
 	ctx.RespErr = service.CreateSAEEnv(ctx.UserName, arg, ctx.Logger)
@@ -3124,12 +2965,6 @@ func RestartSAEApp(c *gin.Context) {
 		}
 	}
 
-	err = commonutil.CheckZadigLicenseFeatureSae()
-	if err != nil {
-		ctx.RespErr = err
-		return
-	}
-
 	ctx.RespErr = service.RestartSAEApp(projectKey, envName, production, appID, ctx.Logger)
 }
 
@@ -3204,12 +3039,6 @@ func BindSAEAppToService(c *gin.Context) {
 		}
 	}
 
-	err = commonutil.CheckZadigLicenseFeatureSae()
-	if err != nil {
-		ctx.RespErr = err
-		return
-	}
-
 	ctx.RespErr = service.BindSAEAppToService(projectKey, envName, production, appID, arg.ServiceName, arg.ServiceModule, ctx.Logger)
 }
 
@@ -3277,12 +3106,6 @@ func RescaleSAEApp(c *gin.Context) {
 		}
 	}
 
-	err = commonutil.CheckZadigLicenseFeatureSae()
-	if err != nil {
-		ctx.RespErr = err
-		return
-	}
-
 	ctx.RespErr = service.RescaleSAEApp(projectKey, envName, production, appID, int32(replicas), ctx.Logger)
 }
 
@@ -3346,12 +3169,6 @@ func RollbackSAEApp(c *gin.Context) {
 		}
 	}
 
-	err = commonutil.CheckZadigLicenseFeatureSae()
-	if err != nil {
-		ctx.RespErr = err
-		return
-	}
-
 	ctx.RespErr = service.RollbackSAEApp(ctx, projectKey, envName, production, appID, versionID, ctx.Logger)
 }
 
@@ -3409,12 +3226,6 @@ func ListSAEAppVersion(c *gin.Context) {
 		}
 	}
 
-	err = commonutil.CheckZadigLicenseFeatureSae()
-	if err != nil {
-		ctx.RespErr = err
-		return
-	}
-
 	ctx.Resp, ctx.RespErr = service.ListSAEAppVersions(projectKey, envName, production, appID, ctx.Logger)
 }
 
@@ -3470,12 +3281,6 @@ func ListSAEAppInstances(c *gin.Context) {
 				}
 			}
 		}
-	}
-
-	err = commonutil.CheckZadigLicenseFeatureSae()
-	if err != nil {
-		ctx.RespErr = err
-		return
 	}
 
 	ctx.Resp, ctx.RespErr = service.ListSAEAppInstances(projectKey, envName, production, appID, ctx.Logger)
@@ -3539,12 +3344,6 @@ func RestartSAEAppInstance(c *gin.Context) {
 				}
 			}
 		}
-	}
-
-	err = commonutil.CheckZadigLicenseFeatureSae()
-	if err != nil {
-		ctx.RespErr = err
-		return
 	}
 
 	ctx.RespErr = service.RestartSAEAppInstance(projectKey, envName, production, appID, instanceID, ctx.Logger)
@@ -3620,12 +3419,6 @@ func ListSAEChangeOrder(c *gin.Context) {
 		}
 	}
 
-	err = commonutil.CheckZadigLicenseFeatureSae()
-	if err != nil {
-		ctx.RespErr = err
-		return
-	}
-
 	ctx.Resp, ctx.RespErr = service.ListSAEChangeOrder(projectKey, envName, production, appID, page, perPage, ctx.Logger)
 }
 
@@ -3671,12 +3464,6 @@ func GetSAEChangeOrder(c *gin.Context) {
 				}
 			}
 		}
-	}
-
-	err = commonutil.CheckZadigLicenseFeatureSae()
-	if err != nil {
-		ctx.RespErr = err
-		return
 	}
 
 	ctx.Resp, ctx.RespErr = service.GetSAEChangeOrder(projectKey, envName, appID, orderID, ctx.Logger)
@@ -3729,12 +3516,6 @@ func AbortSAEChangeOrder(c *gin.Context) {
 		}
 	}
 
-	err = commonutil.CheckZadigLicenseFeatureSae()
-	if err != nil {
-		ctx.RespErr = err
-		return
-	}
-
 	ctx.RespErr = service.AbortSAEChangeOrder(projectKey, envName, production, appID, orderID, ctx.Logger)
 }
 
@@ -3783,12 +3564,6 @@ func RollbackSAEChangeOrder(c *gin.Context) {
 				}
 			}
 		}
-	}
-
-	err = commonutil.CheckZadigLicenseFeatureSae()
-	if err != nil {
-		ctx.RespErr = err
-		return
 	}
 
 	ctx.RespErr = service.RollbackSAEChangeOrder(ctx, projectKey, envName, production, appID, orderID, ctx.Logger)
@@ -3841,12 +3616,6 @@ func ConfirmSAEPipelineBatch(c *gin.Context) {
 		}
 	}
 
-	err = commonutil.CheckZadigLicenseFeatureSae()
-	if err != nil {
-		ctx.RespErr = err
-		return
-	}
-
 	ctx.RespErr = service.ConfirmSAEPipelineBatch(projectKey, envName, production, appID, pipelineID, ctx.Logger)
 }
 
@@ -3893,12 +3662,6 @@ func GetSAEPipeline(c *gin.Context) {
 				}
 			}
 		}
-	}
-
-	err = commonutil.CheckZadigLicenseFeatureSae()
-	if err != nil {
-		ctx.RespErr = err
-		return
 	}
 
 	ctx.Resp, ctx.RespErr = service.GetSAEPipeline(projectKey, envName, production, appID, pipelineID, ctx.Logger)
@@ -3958,12 +3721,6 @@ func GetSAEAppInstanceLog(c *gin.Context) {
 				}
 			}
 		}
-	}
-
-	err = commonutil.CheckZadigLicenseFeatureSae()
-	if err != nil {
-		ctx.RespErr = err
-		return
 	}
 
 	ctx.Resp, ctx.RespErr = service.GetSAEAppInstanceLog(projectKey, envName, production, appID, instanceID, ctx.Logger)
@@ -4034,12 +3791,6 @@ func AddSAEServiceToEnv(c *gin.Context) {
 				}
 			}
 		}
-	}
-
-	err = commonutil.CheckZadigLicenseFeatureSae()
-	if err != nil {
-		ctx.RespErr = err
-		return
 	}
 
 	ctx.RespErr = service.AddSAEAppToEnv(ctx.UserName, projectKey, envName, production, arg, ctx.Logger)

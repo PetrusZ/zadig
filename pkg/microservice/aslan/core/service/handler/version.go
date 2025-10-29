@@ -21,7 +21,6 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	commonutil "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/service/service"
 	"github.com/koderover/zadig/v2/pkg/setting"
 	internalhandler "github.com/koderover/zadig/v2/pkg/shared/handler"
@@ -253,11 +252,6 @@ func RollbackServiceVersion(c *gin.Context) {
 		}
 	}
 
-	if err := commonutil.CheckZadigProfessionalLicense(); err != nil {
-		ctx.RespErr = err
-		return
-	}
-
 	serviceName := c.Param("serviceName")
 	if serviceName == "" {
 		ctx.RespErr = e.ErrInvalidParam.AddDesc("empty serviceName")
@@ -267,11 +261,6 @@ func RollbackServiceVersion(c *gin.Context) {
 	revision, err := strconv.ParseInt(c.Query("revision"), 10, 64)
 	if err != nil {
 		ctx.RespErr = e.ErrInvalidParam.AddErr(fmt.Errorf("invalid revision: %s", err))
-		return
-	}
-
-	if err := commonutil.CheckZadigProfessionalLicense(); err != nil {
-		ctx.RespErr = err
 		return
 	}
 

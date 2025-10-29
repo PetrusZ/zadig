@@ -23,7 +23,6 @@ import (
 	"github.com/koderover/zadig/v2/pkg/types"
 
 	commonservice "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/service"
-	commonutil "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/environment/service"
 	internalhandler "github.com/koderover/zadig/v2/pkg/shared/handler"
 )
@@ -62,11 +61,6 @@ func ListReleases(c *gin.Context) {
 					ctx.UnAuthorized = true
 					return
 				}
-			}
-
-			if err := commonutil.CheckZadigProfessionalLicense(); err != nil {
-				ctx.RespErr = err
-				return
 			}
 		} else {
 			if !ctx.Resources.ProjectAuthInfo[args.ProjectName].IsProjectAdmin &&
@@ -115,11 +109,6 @@ func GetChartValues(c *gin.Context) {
 					ctx.UnAuthorized = true
 					return
 				}
-			}
-
-			if err := commonutil.CheckZadigProfessionalLicense(); err != nil {
-				ctx.RespErr = err
-				return
 			}
 		} else {
 			if !ctx.Resources.ProjectAuthInfo[projectKey].IsProjectAdmin &&
@@ -170,11 +159,6 @@ func GetChartInfos(c *gin.Context) {
 					return
 				}
 			}
-
-			if err := commonutil.CheckZadigProfessionalLicense(); err != nil {
-				ctx.RespErr = err
-				return
-			}
 		} else {
 			if !ctx.Resources.ProjectAuthInfo[projectKey].IsProjectAdmin &&
 				!ctx.Resources.ProjectAuthInfo[projectKey].Env.View {
@@ -220,11 +204,6 @@ func GetImageInfos(c *gin.Context) {
 					ctx.UnAuthorized = true
 					return
 				}
-			}
-
-			if err := commonutil.CheckZadigProfessionalLicense(); err != nil {
-				ctx.RespErr = err
-				return
 			}
 		} else {
 			if !ctx.Resources.ProjectAuthInfo[projectKey].IsProjectAdmin &&

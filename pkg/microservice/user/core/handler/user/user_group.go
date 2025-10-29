@@ -20,7 +20,6 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
-	commonutil "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
 	"github.com/koderover/zadig/v2/pkg/microservice/user/core/service/permission"
 	internalhandler "github.com/koderover/zadig/v2/pkg/shared/handler"
 	e "github.com/koderover/zadig/v2/pkg/tool/errors"
@@ -66,11 +65,6 @@ func CreateUserGroup(c *gin.Context) {
 		return
 	}
 
-	if err = commonutil.CheckZadigEnterpriseLicense(); err != nil {
-		ctx.RespErr = err
-		return
-	}
-
 	ctx.Resp, ctx.RespErr = permission.CreateUserGroup(req.Name, req.Description, req.UIDs, ctx.Logger)
 }
 
@@ -113,12 +107,6 @@ func OpenApiListUserGroups(c *gin.Context) {
 	err = c.BindQuery(&query)
 	if err != nil {
 		ctx.RespErr = e.ErrInvalidParam
-		return
-	}
-
-	err = commonutil.CheckZadigEnterpriseLicense()
-	if err != nil {
-		ctx.RespErr = err
 		return
 	}
 
@@ -232,11 +220,6 @@ func UpdateUserGroupInfo(c *gin.Context) {
 		return
 	}
 
-	if err = commonutil.CheckZadigEnterpriseLicense(); err != nil {
-		ctx.RespErr = err
-		return
-	}
-
 	ctx.RespErr = permission.UpdateUserGroupInfo(groupID, req.Name, req.Description, ctx.Logger)
 }
 
@@ -304,11 +287,6 @@ func BulkAddUserToUserGroup(c *gin.Context) {
 		return
 	}
 
-	if err = commonutil.CheckZadigEnterpriseLicense(); err != nil {
-		ctx.RespErr = err
-		return
-	}
-
 	ctx.RespErr = permission.BulkAddUserToUserGroup(groupID, req.UIDs, ctx.Logger)
 }
 
@@ -336,11 +314,6 @@ func BulkRemoveUserFromUserGroup(c *gin.Context) {
 	err = c.BindJSON(&req)
 	if err != nil {
 		ctx.RespErr = e.ErrInvalidParam
-		return
-	}
-
-	if err = commonutil.CheckZadigEnterpriseLicense(); err != nil {
-		ctx.RespErr = err
 		return
 	}
 

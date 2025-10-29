@@ -27,9 +27,7 @@ import (
 	commonmodels "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/repository/models"
 	commonrepo "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/repository/mongodb"
 	saeservice "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/service/sae"
-	commonutil "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
 	"github.com/koderover/zadig/v2/pkg/setting"
-	e "github.com/koderover/zadig/v2/pkg/tool/errors"
 	"github.com/koderover/zadig/v2/pkg/types"
 )
 
@@ -67,10 +65,6 @@ func (j SAEDeployJobController) GetSpec() interface{} {
 }
 
 func (j SAEDeployJobController) Validate(isExecution bool) error {
-	if err := commonutil.CheckZadigProfessionalLicense(); err != nil {
-		return e.ErrLicenseInvalid.AddDesc("")
-	}
-
 	return nil
 }
 

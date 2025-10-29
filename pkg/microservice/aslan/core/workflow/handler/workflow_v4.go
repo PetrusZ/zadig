@@ -23,7 +23,6 @@ import (
 	"io"
 
 	"github.com/gin-gonic/gin"
-	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
 	"gopkg.in/yaml.v3"
 
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/config"
@@ -702,13 +701,6 @@ func CreateJiraHookForWorkflowV4(c *gin.Context) {
 		}
 	}
 
-	// license checks
-	err = util.CheckZadigProfessionalLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
-	}
-
 	ctx.RespErr = workflow.CreateJiraHookForWorkflowV4(c.Param("workflowName"), jira, ctx.Logger)
 }
 
@@ -764,13 +756,6 @@ func UpdateJiraHookForWorkflowV4(c *gin.Context) {
 				return
 			}
 		}
-	}
-
-	// license checks
-	err = util.CheckZadigProfessionalLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
 	}
 
 	ctx.RespErr = workflow.UpdateJiraHookForWorkflowV4(c.Param("workflowName"), jira, ctx.Logger)
@@ -856,13 +841,6 @@ func CreateMeegoHookForWorkflowV4(c *gin.Context) {
 		}
 	}
 
-	// license checks
-	err = util.CheckZadigProfessionalLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
-	}
-
 	ctx.RespErr = workflow.CreateMeegoHookForWorkflowV4(c.Param("workflowName"), meego, ctx.Logger)
 }
 
@@ -917,13 +895,6 @@ func UpdateMeegoHookForWorkflowV4(c *gin.Context) {
 				return
 			}
 		}
-	}
-
-	// license checks
-	err = util.CheckZadigProfessionalLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
 	}
 
 	ctx.RespErr = workflow.UpdateMeegoHookForWorkflowV4(c.Param("workflowName"), meego, ctx.Logger)

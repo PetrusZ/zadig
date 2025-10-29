@@ -20,7 +20,6 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
-	commonutil "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/delivery/service"
 	internalhandler "github.com/koderover/zadig/v2/pkg/shared/handler"
 	e "github.com/koderover/zadig/v2/pkg/tool/errors"
@@ -87,12 +86,6 @@ func OpenAPIListDeliveryVersion(c *gin.Context) {
 		req.PageSize = 20
 	}
 
-	err = commonutil.CheckZadigProfessionalLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
-	}
-
 	ctx.Resp, ctx.RespErr = service.OpenAPIListDeliveryVersion(req.ProjectKey, req.PageNum, req.PageSize)
 }
 
@@ -148,12 +141,6 @@ func OpenAPIGetDeliveryVersion(c *gin.Context) {
 		return
 	}
 
-	err = commonutil.CheckZadigProfessionalLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
-	}
-
 	ctx.Resp, ctx.RespErr = service.OpenAPIGetDeliveryVersion(c.Param("id"))
 }
 
@@ -205,12 +192,6 @@ func OpenAPIDeleteDeliveryVersion(c *gin.Context) {
 		return
 	}
 
-	err = commonutil.CheckZadigProfessionalLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
-	}
-
 	ctx.RespErr = service.OpenAPIDeleteDeliveryVersion(c.Param("id"))
 }
 
@@ -254,12 +235,6 @@ func OpenAPICreateK8SDeliveryVersion(c *gin.Context) {
 		}
 	}
 
-	err = commonutil.CheckZadigProfessionalLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
-	}
-
 	ctx.RespErr = service.OpenAPICreateK8SDeliveryVersion(req)
 }
 
@@ -301,12 +276,6 @@ func OpenAPICreateHelmDeliveryVersion(c *gin.Context) {
 			ctx.UnAuthorized = true
 			return
 		}
-	}
-
-	err = commonutil.CheckZadigProfessionalLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
 	}
 
 	ctx.RespErr = service.OpenAPICreateHelmDeliveryVersion(req)

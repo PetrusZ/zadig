@@ -52,7 +52,6 @@ import (
 	workwxservice "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/service/workwx"
 	commontypes "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/types"
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
-	commonutil "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
 	workflowController "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/workflow/service/workflow/controller"
 	jobController "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/workflow/service/workflow/controller/job"
 	"github.com/koderover/zadig/v2/pkg/setting"
@@ -1153,11 +1152,6 @@ func RevertWorkflowTaskV4Job(ctx *internalhandler.Context, workflowName, jobName
 			if job.Name == jobName {
 				switch job.JobType {
 				case string(config.JobZadigDeploy):
-					err = commonutil.CheckZadigProfessionalLicense()
-					if err != nil {
-						return err
-					}
-
 					inputSpec := new(CommonRevertInput)
 					err = commonmodels.IToi(input, inputSpec)
 					if err != nil {
@@ -1274,11 +1268,6 @@ func RevertWorkflowTaskV4Job(ctx *internalhandler.Context, workflowName, jobName
 
 					return nil
 				case string(config.JobZadigHelmDeploy):
-					err = commonutil.CheckZadigProfessionalLicense()
-					if err != nil {
-						return err
-					}
-
 					inputSpec := new(CommonRevertInput)
 					err = commonmodels.IToi(input, inputSpec)
 					if err != nil {

@@ -23,7 +23,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	commonutil "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/environment/service"
 	"github.com/koderover/zadig/v2/pkg/setting"
 	internalhandler "github.com/koderover/zadig/v2/pkg/shared/handler"
@@ -64,12 +63,6 @@ func ListKubeEvents(c *gin.Context) {
 					ctx.UnAuthorized = true
 					return
 				}
-			}
-
-			err = commonutil.CheckZadigProfessionalLicense()
-			if err != nil {
-				ctx.RespErr = err
-				return
 			}
 		} else {
 			if !(ctx.Resources.ProjectAuthInfo[projectKey].Env.View ||
@@ -129,12 +122,6 @@ func DeletePod(c *gin.Context) {
 					return
 				}
 			}
-
-			err = commonutil.CheckZadigProfessionalLicense()
-			if err != nil {
-				ctx.RespErr = err
-				return
-			}
 		} else {
 			if !(ctx.Resources.ProjectAuthInfo[projectName].Env.ManagePods ||
 				ctx.Resources.ProjectAuthInfo[projectName].IsProjectAdmin) {
@@ -180,12 +167,6 @@ func ListPodEvents(c *gin.Context) {
 					ctx.UnAuthorized = true
 					return
 				}
-			}
-
-			err = commonutil.CheckZadigProfessionalLicense()
-			if err != nil {
-				ctx.RespErr = err
-				return
 			}
 		} else {
 			if !(ctx.Resources.ProjectAuthInfo[projectKey].Env.View ||
@@ -248,12 +229,6 @@ func DownloadFileFromPod(c *gin.Context) {
 					ctx.UnAuthorized = true
 					return
 				}
-			}
-
-			err = commonutil.CheckZadigProfessionalLicense()
-			if err != nil {
-				ctx.RespErr = err
-				return
 			}
 		} else {
 			if !ctx.Resources.ProjectAuthInfo[projectKey].IsProjectAdmin &&
@@ -344,12 +319,6 @@ func ListPodsInfo(c *gin.Context) {
 					return
 				}
 			}
-
-			err = commonutil.CheckZadigProfessionalLicense()
-			if err != nil {
-				ctx.RespErr = err
-				return
-			}
 		} else {
 			if !(ctx.Resources.ProjectAuthInfo[projectKey].Env.View ||
 				ctx.Resources.ProjectAuthInfo[projectKey].IsProjectAdmin) {
@@ -417,12 +386,6 @@ func GetPodsDetailInfo(c *gin.Context) {
 					ctx.UnAuthorized = true
 					return
 				}
-			}
-
-			err = commonutil.CheckZadigProfessionalLicense()
-			if err != nil {
-				ctx.RespErr = err
-				return
 			}
 		} else {
 			if !(ctx.Resources.ProjectAuthInfo[projectKey].Env.View ||
@@ -494,12 +457,6 @@ func ListK8sResOverview(c *gin.Context) {
 					return
 				}
 			}
-
-			err = commonutil.CheckZadigProfessionalLicense()
-			if err != nil {
-				ctx.RespErr = err
-				return
-			}
 		} else {
 			if !(ctx.Resources.ProjectAuthInfo[projectKey].Env.View ||
 				ctx.Resources.ProjectAuthInfo[projectKey].IsProjectAdmin) {
@@ -553,12 +510,6 @@ func GetK8sResourceYaml(c *gin.Context) {
 					return
 				}
 			}
-
-			err = commonutil.CheckZadigProfessionalLicense()
-			if err != nil {
-				ctx.RespErr = err
-				return
-			}
 		} else {
 			if !(ctx.Resources.ProjectAuthInfo[projectKey].Env.View ||
 				ctx.Resources.ProjectAuthInfo[projectKey].IsProjectAdmin) {
@@ -608,12 +559,6 @@ func GetK8sWorkflowDetail(c *gin.Context) {
 					ctx.UnAuthorized = true
 					return
 				}
-			}
-
-			err = commonutil.CheckZadigProfessionalLicense()
-			if err != nil {
-				ctx.RespErr = err
-				return
 			}
 		} else {
 			if !(ctx.Resources.ProjectAuthInfo[projectKey].Env.View ||
@@ -678,12 +623,6 @@ func GetResourceDeployStatus(c *gin.Context) {
 					return
 				}
 			}
-
-			err = commonutil.CheckZadigProfessionalLicense()
-			if err != nil {
-				ctx.RespErr = err
-				return
-			}
 		} else {
 			if !(ctx.Resources.ProjectAuthInfo[projectKey].Env.View ||
 				ctx.Resources.ProjectAuthInfo[projectKey].IsProjectAdmin) {
@@ -734,12 +673,6 @@ func GetReleaseDeployStatus(c *gin.Context) {
 					ctx.UnAuthorized = true
 					return
 				}
-			}
-
-			err = commonutil.CheckZadigProfessionalLicense()
-			if err != nil {
-				ctx.RespErr = err
-				return
 			}
 		} else {
 			if !(ctx.Resources.ProjectAuthInfo[projectKey].Env.View ||
@@ -800,12 +733,6 @@ func GetReleaseInstanceDeployStatus(c *gin.Context) {
 					ctx.UnAuthorized = true
 					return
 				}
-			}
-
-			err = commonutil.CheckZadigProfessionalLicense()
-			if err != nil {
-				ctx.RespErr = err
-				return
 			}
 		} else {
 			if !(ctx.Resources.ProjectAuthInfo[projectKey].Env.View ||

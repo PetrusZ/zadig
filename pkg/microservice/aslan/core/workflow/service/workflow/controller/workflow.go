@@ -28,10 +28,8 @@ import (
 	commonrepo "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/repository/mongodb"
 	templaterepo "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/repository/mongodb/template"
 	commonservice "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/service"
-	commonutil "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
 	jobctrl "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/workflow/service/workflow/controller/job"
 	"github.com/koderover/zadig/v2/pkg/setting"
-	"github.com/koderover/zadig/v2/pkg/shared/client/plutusvendor"
 	e "github.com/koderover/zadig/v2/pkg/tool/errors"
 	"github.com/koderover/zadig/v2/pkg/tool/log"
 	"github.com/koderover/zadig/v2/pkg/types"
@@ -345,16 +343,6 @@ func (w *Workflow) Validate(isExecution bool) error {
 		return e.ErrLintWorkflow.AddErr(err)
 	}
 
-	licenseStatus, err := plutusvendor.New().CheckZadigXLicenseStatus()
-	if err != nil {
-		return fmt.Errorf("failed to validate zadig license status, error: %s", err)
-	}
-	if !commonutil.ValidateZadigProfessionalLicense(licenseStatus) {
-		if w.ConcurrencyLimit != -1 && w.ConcurrencyLimit != 1 {
-			return e.ErrLicenseInvalid.AddDesc("基础版工作流并发只支持开关，不支持数量")
-		}
-	}
-
 	if project.ProductFeature != nil {
 		if project.ProductFeature.DeployType != setting.K8SDeployType && project.ProductFeature.DeployType != setting.HelmDeployType {
 			return e.ErrLintWorkflow.AddDesc("common workflow only support k8s and helm project")
@@ -377,12 +365,6 @@ func (w *Workflow) Validate(isExecution bool) error {
 	}
 
 	for _, stage := range w.Stages {
-		if !commonutil.ValidateZadigProfessionalLicense(licenseStatus) {
-			if stage.ManualExec != nil && stage.ManualExec.Enabled {
-				return e.ErrLicenseInvalid.AddDesc("基础版不支持工作流手动执行")
-			}
-		}
-
 		if _, ok := stageNameMap[stage.Name]; !ok {
 			stageNameMap[stage.Name] = true
 		} else {

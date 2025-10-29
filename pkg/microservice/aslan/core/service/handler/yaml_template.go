@@ -21,7 +21,6 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
-	commonutil "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
 	svcservice "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/service/service"
 	internalhandler "github.com/koderover/zadig/v2/pkg/shared/handler"
 	"github.com/koderover/zadig/v2/pkg/types"
@@ -83,13 +82,6 @@ func LoadServiceFromYamlTemplate(c *gin.Context) {
 		}
 	}
 
-	if production {
-		if err := commonutil.CheckZadigProfessionalLicense(); err != nil {
-			ctx.RespErr = err
-			return
-		}
-	}
-
 	ctx.RespErr = svcservice.LoadServiceFromYamlTemplate(ctx.UserName, req, false, production, ctx.Logger)
 }
 
@@ -146,13 +138,6 @@ func ReloadServiceFromYamlTemplate(c *gin.Context) {
 				ctx.UnAuthorized = true
 				return
 			}
-		}
-	}
-
-	if production {
-		if err := commonutil.CheckZadigProfessionalLicense(); err != nil {
-			ctx.RespErr = err
-			return
 		}
 	}
 

@@ -21,7 +21,6 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	commonutil "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/system/repository/models"
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/system/service"
 	"github.com/koderover/zadig/v2/pkg/setting"
@@ -68,12 +67,6 @@ func GetOperationLogs(c *gin.Context) {
 					ctx.UnAuthorized = true
 					return
 				}
-			}
-
-			err = commonutil.CheckZadigProfessionalLicense()
-			if err != nil {
-				ctx.RespErr = err
-				return
 			}
 		} else {
 			if !ctx.Resources.ProjectAuthInfo[projectKey].IsProjectAdmin &&

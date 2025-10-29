@@ -21,7 +21,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	commonutil "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
 	ticketservice "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/ticket/service"
 	internalhandler "github.com/koderover/zadig/v2/pkg/shared/handler"
 )
@@ -38,12 +37,6 @@ func ListApprovalTickets(c *gin.Context) {
 
 	projectKey := c.Query("projectName")
 	query := c.Query("query")
-
-	err = commonutil.CheckZadigProfessionalLicense()
-	if err != nil {
-		ctx.RespErr = err
-		return
-	}
 
 	ctx.Resp, ctx.RespErr = ticketservice.ListApprovalTicket(projectKey, query, ctx.UserID, ctx.Logger)
 }
