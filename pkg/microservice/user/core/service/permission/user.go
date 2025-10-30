@@ -835,17 +835,6 @@ func GetUserCount(logger *zap.SugaredLogger) (*types.UserStatistics, error) {
 		return nil, err
 	}
 
-	status, checkErr := vendorClient.CheckZadigXLicenseStatus()
-	if checkErr != nil {
-		return nil, checkErr
-	}
-
-	totalActiveUser, err := orm.CountActiveUser(status.UpdatedAt, repository.DB)
-	if err != nil {
-		logger.Errorf("Failed to count user by type from db, the error is: %s", err.Error())
-		return nil, err
-	}
-
 	totalUser, err := orm.CountUser(repository.DB)
 	if err != nil {
 		logger.Errorf("Failed to count total user from db, the error is: %s", err.Error())
@@ -853,7 +842,6 @@ func GetUserCount(logger *zap.SugaredLogger) (*types.UserStatistics, error) {
 	}
 	return &types.UserStatistics{
 		UserByType: userCountByType,
-		ActiveUser: totalActiveUser,
 		TotalUser:  totalUser,
 	}, nil
 }

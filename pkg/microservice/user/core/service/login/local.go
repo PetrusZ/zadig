@@ -33,7 +33,6 @@ import (
 	"github.com/koderover/zadig/v2/pkg/microservice/user/core/service/common"
 	"github.com/koderover/zadig/v2/pkg/setting"
 	"github.com/koderover/zadig/v2/pkg/shared/client/aslan"
-	"github.com/koderover/zadig/v2/pkg/shared/client/plutusvendor"
 	zadigCache "github.com/koderover/zadig/v2/pkg/tool/cache"
 )
 
@@ -64,35 +63,6 @@ type CheckSignatureRes struct {
 }
 
 func CheckSignature(lastLoginTime int64, logger *zap.SugaredLogger) error {
-	vendorClient := plutusvendor.New()
-	err := vendorClient.Health()
-	if err != nil {
-		return err
-	}
-
-	status, checkErr := vendorClient.CheckZadigXLicenseStatus()
-	if checkErr != nil {
-		return checkErr
-	}
-
-	userNum, err := orm.CountActiveUser(status.UpdatedAt, repository.DB)
-	if err != nil {
-		return err
-	}
-
-	res, checkErr := vendorClient.CheckSignature(userNum)
-	if checkErr != nil {
-		return checkErr
-	}
-
-	if res.Code == 6694 {
-		if lastLoginTime > status.UpdatedAt {
-			return nil
-		} else {
-			return fmt.Errorf("系统使用用户数量已达授权人数上限，请联系系统管理员")
-		}
-	}
-
 	return nil
 }
 

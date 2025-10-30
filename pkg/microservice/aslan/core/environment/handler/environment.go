@@ -40,7 +40,6 @@ import (
 	commontypes "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/types"
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/environment/service"
 	"github.com/koderover/zadig/v2/pkg/setting"
-	"github.com/koderover/zadig/v2/pkg/shared/client/plutusvendor"
 	internalhandler "github.com/koderover/zadig/v2/pkg/shared/handler"
 	"github.com/koderover/zadig/v2/pkg/shared/kube/resource"
 	e "github.com/koderover/zadig/v2/pkg/tool/errors"
@@ -1131,23 +1130,8 @@ func updateMultiK8sEnv(c *gin.Context, request *service.UpdateEnvRequest, produc
 		return
 	}
 
-	licenseStatus, err := plutusvendor.New().CheckZadigXLicenseStatus()
-	if err != nil {
-		ctx.RespErr = fmt.Errorf("failed to validate zadig license status, error: %s", err)
-		return
-	}
 	var envNames []string
 	for _, arg := range args {
-		for _, service := range arg.Services {
-			if service.DeployStrategy == setting.ServiceDeployStrategyImport {
-				if !((licenseStatus.Type == plutusvendor.ZadigSystemTypeProfessional ||
-					licenseStatus.Type == plutusvendor.ZadigSystemTypeEnterprise) &&
-					licenseStatus.Status == plutusvendor.ZadigXLicenseStatusNormal) {
-					ctx.RespErr = e.ErrLicenseInvalid.AddDesc("")
-					return
-				}
-			}
-		}
 		envNames = append(envNames, arg.EnvName)
 	}
 

@@ -53,7 +53,6 @@ import (
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/service/kube"
 	commonutil "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/util"
 	"github.com/koderover/zadig/v2/pkg/setting"
-	"github.com/koderover/zadig/v2/pkg/shared/client/plutusvendor"
 	"github.com/koderover/zadig/v2/pkg/shared/handler"
 	"github.com/koderover/zadig/v2/pkg/tool/clientmanager"
 	e "github.com/koderover/zadig/v2/pkg/tool/errors"
@@ -111,37 +110,6 @@ type ScheduleStrategy struct {
 }
 
 func (args *K8SCluster) Validate() error {
-	licenseStatus, err := plutusvendor.New().CheckZadigXLicenseStatus()
-	if err != nil {
-		return fmt.Errorf("failed to validate zadig license status, error: %s", err)
-	}
-	if !((licenseStatus.Type == plutusvendor.ZadigSystemTypeProfessional ||
-		licenseStatus.Type == plutusvendor.ZadigSystemTypeEnterprise) &&
-		licenseStatus.Status == plutusvendor.ZadigXLicenseStatusNormal) {
-		if args.Provider == config.ClusterProviderTKEServerless || args.Provider == config.ClusterProviderAmazonEKS || args.Production {
-			return e.ErrLicenseInvalid.AddDesc("")
-		}
-		if args.AdvancedConfig != nil {
-			for _, scheduleStrategy := range args.AdvancedConfig.ScheduleStrategy {
-				if scheduleStrategy.Strategy == setting.RequiredSchedule || scheduleStrategy.Tolerations != "" {
-					return e.ErrLicenseInvalid.AddDesc("")
-				}
-			}
-		}
-		if args.DindCfg != nil {
-			if args.DindCfg.Replicas != 1 {
-				return e.ErrLicenseInvalid.AddDesc("")
-			}
-			if args.DindCfg.Resources != nil {
-				if args.DindCfg.Resources.Limits != nil {
-					if args.DindCfg.Resources.Limits.CPU != 4000 || args.DindCfg.Resources.Limits.Memory != 8192 {
-						return e.ErrLicenseInvalid.AddDesc("")
-					}
-				}
-			}
-		}
-	}
-
 	return nil
 }
 

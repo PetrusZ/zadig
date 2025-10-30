@@ -23,38 +23,16 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/koderover/zadig/v2/pkg/types"
-	"k8s.io/apimachinery/pkg/util/sets"
 
 	userhandler "github.com/koderover/zadig/v2/pkg/microservice/user/core/handler/user"
 	"github.com/koderover/zadig/v2/pkg/microservice/user/core/service/permission"
 	"github.com/koderover/zadig/v2/pkg/setting"
-	"github.com/koderover/zadig/v2/pkg/shared/client/plutusvendor"
 	internalhandler "github.com/koderover/zadig/v2/pkg/shared/handler"
 	e "github.com/koderover/zadig/v2/pkg/tool/errors"
 	"github.com/koderover/zadig/v2/pkg/tool/log"
 )
 
 func checkLicense(actions []string) error {
-	licenseStatus, err := plutusvendor.New().CheckZadigXLicenseStatus()
-	if err != nil {
-		return fmt.Errorf("failed to validate zadig license status, error: %s", err)
-	}
-	if !((licenseStatus.Type == plutusvendor.ZadigSystemTypeProfessional ||
-		licenseStatus.Type == plutusvendor.ZadigSystemTypeEnterprise) &&
-		licenseStatus.Status == plutusvendor.ZadigXLicenseStatusNormal) {
-		actionSet := sets.NewString(actions...)
-		if actionSet.Has(permission.VerbCreateReleasePlan) || actionSet.Has(permission.VerbDeleteReleasePlan) ||
-			actionSet.Has(permission.VerbEditReleasePlan) || actionSet.Has(permission.VerbGetReleasePlan) ||
-			actionSet.Has(permission.VerbEditDataCenterInsightConfig) ||
-			actionSet.Has(permission.VerbGetProductionService) || actionSet.Has(permission.VerbGetProductionService) ||
-			actionSet.Has(permission.VerbGetProductionService) || actionSet.Has(permission.VerbGetProductionService) ||
-			actionSet.Has(permission.VerbGetProductionEnv) || actionSet.Has(permission.VerbCreateProductionEnv) ||
-			actionSet.Has(permission.VerbConfigProductionEnv) || actionSet.Has(permission.VerbEditProductionEnv) ||
-			actionSet.Has(permission.VerbDeleteProductionEnv) || actionSet.Has(permission.VerbDebugProductionEnvPod) ||
-			actionSet.Has(permission.VerbGetDelivery) || actionSet.Has(permission.VerbCreateDelivery) || actionSet.Has(permission.VerbDeleteDelivery) {
-			return e.ErrLicenseInvalid.AddDesc("")
-		}
-	}
 	return nil
 }
 
@@ -230,29 +208,6 @@ func UpdateRoleImpl(c *gin.Context, ctx *internalhandler.Context) {
 			return
 		}
 	}
-
-	//licenseStatus, err := plutusvendor.New().CheckZadigXLicenseStatus()
-	//if err != nil {
-	//	ctx.RespErr = fmt.Errorf("failed to validate zadig license status, error: %s", err)
-	//	return
-	//}
-	//if !((licenseStatus.Type == plutusvendor.ZadigSystemTypeProfessional ||
-	//	licenseStatus.Type == plutusvendor.ZadigSystemTypeEnterprise) &&
-	//	licenseStatus.Status == plutusvendor.ZadigXLicenseStatusNormal) {
-	//	actionSet := sets.NewString(args.Actions...)
-	//	if actionSet.Has(permission.VerbCreateReleasePlan) || actionSet.Has(permission.VerbDeleteReleasePlan) ||
-	//		actionSet.Has(permission.VerbEditReleasePlan) || actionSet.Has(permission.VerbGetReleasePlan) ||
-	//		actionSet.Has(permission.VerbEditDataCenterInsightConfig) ||
-	//		actionSet.Has(permission.VerbGetProductionService) || actionSet.Has(permission.VerbCreateProductionService) ||
-	//		actionSet.Has(permission.VerbEditProductionService) || actionSet.Has(permission.VerbDeleteProductionService) ||
-	//		actionSet.Has(permission.VerbGetProductionEnv) || actionSet.Has(permission.VerbCreateProductionEnv) ||
-	//		actionSet.Has(permission.VerbConfigProductionEnv) || actionSet.Has(permission.VerbEditProductionEnv) ||
-	//		actionSet.Has(permission.VerbDeleteProductionEnv) || actionSet.Has(permission.VerbDebugProductionEnvPod) ||
-	//		actionSet.Has(permission.VerbGetDelivery) || actionSet.Has(permission.VerbCreateDelivery) || actionSet.Has(permission.VerbDeleteDelivery) {
-	//		ctx.RespErr = e.ErrLicenseInvalid.AddDesc("")
-	//		return
-	//	}
-	//}
 
 	ctx.RespErr = permission.UpdateRole(projectName, args, ctx.Logger)
 }

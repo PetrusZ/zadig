@@ -17,12 +17,7 @@ limitations under the License.
 package models
 
 import (
-	"fmt"
-
-	"github.com/koderover/zadig/v2/pkg/microservice/aslan/config"
 	"github.com/koderover/zadig/v2/pkg/setting"
-	"github.com/koderover/zadig/v2/pkg/shared/client/plutusvendor"
-	e "github.com/koderover/zadig/v2/pkg/tool/errors"
 	"github.com/koderover/zadig/v2/pkg/types"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -83,16 +78,5 @@ func (PrivateKey) TableName() string {
 }
 
 func (args *PrivateKey) Validate() error {
-	licenseStatus, err := plutusvendor.New().CheckZadigXLicenseStatus()
-	if err != nil {
-		return fmt.Errorf("failed to validate zadig license status, error: %s", err)
-	}
-	if !((licenseStatus.Type == plutusvendor.ZadigSystemTypeProfessional ||
-		licenseStatus.Type == plutusvendor.ZadigSystemTypeEnterprise) &&
-		licenseStatus.Status == plutusvendor.ZadigXLicenseStatusNormal) {
-		if args.Provider == config.VMProviderAmazon {
-			return e.ErrLicenseInvalid.AddDesc("")
-		}
-	}
 	return nil
 }

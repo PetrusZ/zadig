@@ -25,11 +25,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/koderover/zadig/v2/pkg/types"
 
-	"github.com/koderover/zadig/v2/pkg/microservice/aslan/config"
 	commonmodels "github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/repository/models"
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/common/service/s3"
 	"github.com/koderover/zadig/v2/pkg/microservice/aslan/core/system/service"
-	"github.com/koderover/zadig/v2/pkg/shared/client/plutusvendor"
 	internalhandler "github.com/koderover/zadig/v2/pkg/shared/handler"
 	e "github.com/koderover/zadig/v2/pkg/tool/errors"
 	"github.com/koderover/zadig/v2/pkg/tool/log"
@@ -127,20 +125,6 @@ func CreateS3Storage(c *gin.Context) {
 	if err := c.BindJSON(args); err != nil {
 		ctx.RespErr = e.ErrInvalidParam.AddErr(err)
 		return
-	}
-
-	licenseStatus, err := plutusvendor.New().CheckZadigXLicenseStatus()
-	if err != nil {
-		ctx.RespErr = fmt.Errorf("failed to validate zadig license status, error: %s", err)
-		return
-	}
-	if args.Provider == config.S3StorageProviderAmazonS3 {
-		if !((licenseStatus.Type == plutusvendor.ZadigSystemTypeProfessional ||
-			licenseStatus.Type == plutusvendor.ZadigSystemTypeEnterprise) &&
-			licenseStatus.Status == plutusvendor.ZadigXLicenseStatusNormal) {
-			ctx.RespErr = e.ErrLicenseInvalid.AddDesc("")
-			return
-		}
 	}
 
 	storage := &s3.S3{
@@ -251,20 +235,6 @@ func UpdateS3Storage(c *gin.Context) {
 	if err := c.BindJSON(args); err != nil {
 		ctx.RespErr = e.ErrInvalidParam.AddErr(err)
 		return
-	}
-
-	licenseStatus, err := plutusvendor.New().CheckZadigXLicenseStatus()
-	if err != nil {
-		ctx.RespErr = fmt.Errorf("failed to validate zadig license status, error: %s", err)
-		return
-	}
-	if args.Provider == config.S3StorageProviderAmazonS3 {
-		if !((licenseStatus.Type == plutusvendor.ZadigSystemTypeProfessional ||
-			licenseStatus.Type == plutusvendor.ZadigSystemTypeEnterprise) &&
-			licenseStatus.Status == plutusvendor.ZadigXLicenseStatusNormal) {
-			ctx.RespErr = e.ErrLicenseInvalid.AddDesc("")
-			return
-		}
 	}
 
 	storage := &s3.S3{
