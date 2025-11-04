@@ -118,7 +118,6 @@ func (j WorkflowTriggerJobController) Update(useUserInput bool, ticket *commonmo
 	j.jobSpec.TriggerType = currJobSpec.TriggerType
 	j.jobSpec.Source = currJobSpec.Source
 	j.jobSpec.SourceJobName = currJobSpec.SourceJobName
-	j.jobSpec.SourceService = currJobSpec.SourceService
 
 	newFixedWorkflowList := make([]*commonmodels.ServiceTriggerWorkflowInfo, 0)
 	newServiceWorkflowList := make([]*commonmodels.ServiceTriggerWorkflowInfo, 0)
