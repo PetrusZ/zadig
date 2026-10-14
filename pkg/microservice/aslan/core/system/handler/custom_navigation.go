@@ -73,7 +73,8 @@ func isProfessionalLicenseRequiredKey(key config.NavigationItemKey) bool {
 func isEnterpriseLicenseRequiredKey(key config.NavigationItemKey) bool {
 	switch key {
 	case config.NavigationKeyReleasePlan,
-		config.NavigationKeyBizCatalog:
+		config.NavigationKeyBizCatalog,
+		config.NavigationKeyAIReviewInsight:
 		return true
 	default:
 		return false
@@ -182,6 +183,8 @@ func hasNavigationPermission(ctx *internalhandler.Context, key config.Navigation
 		return ctx.Resources.SystemActions.DataCenter.ViewOverView
 	case config.NavigationKeyDataInsight:
 		return ctx.Resources.SystemActions.DataCenter.ViewInsight
+	case config.NavigationKeyAIReviewInsight:
+		return ctx.Resources.SystemActions.DataCenter.ViewAIReviewInsight
 	default:
 		return true
 	}
